@@ -26,6 +26,8 @@ export interface GameState {
   badges: Badge[];
   streak: number;
   lastPlayedAt?: Date;
+  lastDailyChallengeDate?: string;
+  dailyChallengeIndex: number;
 }
 
 const LEVELS = [
@@ -52,6 +54,7 @@ const INITIAL_STATE: GameState = {
   completedLessons: [],
   badges: INITIAL_BADGES,
   streak: 0,
+  dailyChallengeIndex: 0,
 };
 
 interface GameContextType {
@@ -66,6 +69,8 @@ interface GameContextType {
   getLevelProgress: () => number;
   isLessonCompleted: (lessonId: string) => boolean;
   isWorldUnlocked: (worldId: number) => boolean;
+  completeDailyChallenge: (xp: number) => void;
+  getDailyChallengeStatus: () => { isCompleted: boolean; todayChallenge: number };
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -161,6 +166,46 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return worldId <= state.currentWorld;
   };
 
+  const getTodayDateString = () => {
+    return new Date().toISOString().split('T')[0];
+  };
+
+  const getDailyChallengeStatus = () => {
+    const today = getTodayDateString();
+    const isCompleted = state.lastDailyChallengeDate === today;
+    return { 
+      isCompleted, 
+      todayChallenge: state.dailyChallengeIndex 
+    };
+  };
+
+  const completeDailyChallenge = (xp: number) => {
+    const today = getTodayDateString();
+    if (state.lastDailyChallengeDate === today) return;
+
+    setState(prev => {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      
+      const isConsecutiveDay = prev.lastDailyChallengeDate === yesterdayStr;
+      const newStreak = isConsecutiveDay ? prev.streak + 1 : 1;
+      
+      const newXp = prev.xp + xp;
+      const newLevel = calculateLevel(newXp);
+      
+      return {
+        ...prev,
+        xp: newXp,
+        level: newLevel,
+        streak: newStreak,
+        lastDailyChallengeDate: today,
+        dailyChallengeIndex: prev.dailyChallengeIndex + 1,
+        lastPlayedAt: new Date(),
+      };
+    });
+  };
+
   return (
     <GameContext.Provider
       value={{
@@ -175,6 +220,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         getLevelProgress,
         isLessonCompleted,
         isWorldUnlocked,
+        completeDailyChallenge,
+        getDailyChallengeStatus,
       }}
     >
       {children}

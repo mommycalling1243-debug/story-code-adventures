@@ -7,6 +7,8 @@ import CodeBlock from '@/components/CodeBlock';
 import StoryPanel from '@/components/StoryPanel';
 import InteractiveCodeEditor from '@/components/InteractiveCodeEditor';
 import XpPopup from '@/components/XpPopup';
+import CelebrationOverlay from '@/components/CelebrationOverlay';
+import useSoundEffects from '@/hooks/useSoundEffects';
 import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
 
 // Lesson content database
@@ -142,10 +144,13 @@ const Lesson: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
   const { completeLesson, earnBadge, unlockWorld, isLessonCompleted } = useGame();
+  const { playLessonCompleteSound } = useSoundEffects();
   
   const [step, setStep] = useState(0);
   const [showXp, setShowXp] = useState(false);
   const [questCompleted, setQuestCompleted] = useState(false);
+  const [showBadge, setShowBadge] = useState<{ name: string; icon: string } | null>(null);
+  const [showWorldUnlock, setShowWorldUnlock] = useState<string | null>(null);
 
   // Find the lesson and world
   let world = null;
@@ -182,11 +187,15 @@ const Lesson: React.FC = () => {
     if (!questCompleted && !alreadyCompleted) {
       setQuestCompleted(true);
       setShowXp(true);
+      playLessonCompleteSound();
       completeLesson(lesson.id, world.slug, lesson.xp);
       
       // Check if this was the first lesson - earn badge
       if (lessonId === 'var-1') {
         earnBadge('variable-starter');
+        setTimeout(() => {
+          setShowBadge({ name: 'Variable Starter', icon: '📦' });
+        }, 2600);
       }
       
       // Check if this completes the world
@@ -197,6 +206,12 @@ const Lesson: React.FC = () => {
       
       if (completedCount === worldLessons.length) {
         unlockWorld(world.id + 1);
+        const nextW = worlds.find(w => w.id === world.id + 1);
+        if (nextW) {
+          setTimeout(() => {
+            setShowWorldUnlock(nextW.name);
+          }, 3000);
+        }
       }
     }
   };
@@ -226,6 +241,28 @@ const Lesson: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <XpPopup amount={lesson.xp} show={showXp} onComplete={() => setShowXp(false)} />
+      
+      {showBadge && (
+        <CelebrationOverlay
+          show={true}
+          type="badge"
+          title="Badge Earned!"
+          subtitle={showBadge.name}
+          icon={showBadge.icon}
+          onComplete={() => setShowBadge(null)}
+        />
+      )}
+      
+      {showWorldUnlock && (
+        <CelebrationOverlay
+          show={true}
+          type="world"
+          title="New World Unlocked!"
+          subtitle={showWorldUnlock}
+          icon="🌍"
+          onComplete={() => setShowWorldUnlock(null)}
+        />
+      )}
 
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">

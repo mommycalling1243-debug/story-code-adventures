@@ -35,7 +35,7 @@ const PlayerStats: React.FC = () => {
 
         <div className="flex items-center justify-between pt-2 border-t border-border">
           <div className="flex items-center gap-2">
-            <Flame className="w-4 h-4 text-primary" />
+            <Flame className={`w-4 h-4 ${state.streak > 0 ? 'text-orange-500' : 'text-muted-foreground'}`} />
             <span className="text-sm font-medium">{state.streak} day streak</span>
           </div>
           <div className="flex items-center gap-2">

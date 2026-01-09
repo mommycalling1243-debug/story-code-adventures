@@ -63,28 +63,76 @@ export default {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
-  		keyframes: {
-  			'accordion-down': {
-  				from: {
-  					height: '0'
-  				},
-  				to: {
-  					height: 'var(--radix-accordion-content-height)'
-  				}
-  			},
-  			'accordion-up': {
-  				from: {
-  					height: 'var(--radix-accordion-content-height)'
-  				},
-  				to: {
-  					height: '0'
-  				}
-  			}
-  		},
-  		animation: {
-  			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
-  		},
+		keyframes: {
+			'accordion-down': {
+				from: {
+					height: '0'
+				},
+				to: {
+					height: 'var(--radix-accordion-content-height)'
+				}
+			},
+			'accordion-up': {
+				from: {
+					height: 'var(--radix-accordion-content-height)'
+				},
+				to: {
+					height: '0'
+				}
+			},
+			'confetti-fall': {
+				'0%': {
+					transform: 'translateY(0) rotate(0deg)',
+					opacity: '1'
+				},
+				'100%': {
+					transform: 'translateY(100vh) rotate(720deg)',
+					opacity: '0'
+				}
+			},
+			'celebrate-pop': {
+				'0%': {
+					transform: 'scale(0) rotate(-10deg)',
+					opacity: '0'
+				},
+				'50%': {
+					transform: 'scale(1.2) rotate(5deg)',
+					opacity: '1'
+				},
+				'100%': {
+					transform: 'scale(1) rotate(0deg)',
+					opacity: '1'
+				}
+			},
+			'sparkle': {
+				'0%, 100%': {
+					opacity: '1',
+					transform: 'scale(1)'
+				},
+				'50%': {
+					opacity: '0.5',
+					transform: 'scale(0.8)'
+				}
+			},
+			'float-up': {
+				'0%': {
+					transform: 'translateY(0) scale(1)',
+					opacity: '1'
+				},
+				'100%': {
+					transform: 'translateY(-50px) scale(1.2)',
+					opacity: '0'
+				}
+			}
+		},
+		animation: {
+			'accordion-down': 'accordion-down 0.2s ease-out',
+			'accordion-up': 'accordion-up 0.2s ease-out',
+			'confetti-fall': 'confetti-fall 2.5s ease-out forwards',
+			'celebrate-pop': 'celebrate-pop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards',
+			'sparkle': 'sparkle 1s ease-in-out infinite',
+			'float-up': 'float-up 1s ease-out forwards'
+		},
   		boxShadow: {
   			'2xs': 'var(--shadow-2xs)',
   			xs: 'var(--shadow-xs)',

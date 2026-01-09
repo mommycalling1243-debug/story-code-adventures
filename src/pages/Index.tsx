@@ -183,7 +183,14 @@ const Index: React.FC = () => {
       <footer className="py-8 px-4 border-t border-border">
         <div className="container mx-auto text-center text-sm text-muted-foreground">
           <p>Made with 💖 for curious minds everywhere</p>
-          <p className="mt-2">PyQuest Adventures © 2026</p>
+          <p className="mt-2">PyQuest Adventures © 2026 • 100% Free & Open Source</p>
+          <p className="mt-1 text-xs">
+            <a href="https://github.com" className="hover:text-primary transition-colors">
+              View on GitHub
+            </a>
+            {' • '}
+            <span>MIT License - Use it however you like!</span>
+          </p>
         </div>
       </footer>
     </div>
