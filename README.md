@@ -1,73 +1,87 @@
-# Welcome to your Lovable project
+# 🐍 PyQuest Adventures
 
-## Project info
+**A free, open-source, story-driven Python learning platform for absolute beginners.**
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Made with React](https://img.shields.io/badge/Made%20with-React-61DAFB.svg)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
-## How can I edit this code?
+## ✨ Features
 
-There are several ways of editing your application.
+- 🎮 **Game-Based Learning** - Earn XP, unlock badges, and level up as you learn
+- 📖 **Story-Driven Lessons** - Every concept is taught through engaging adventures
+- 🔥 **Daily Challenges** - Quick puzzles with streak bonuses to keep you learning
+- 🎵 **Sound Effects & Celebrations** - Fun audio feedback and confetti animations
+- 📱 **Fully Responsive** - Works on desktop, tablet, and mobile
+- 🌙 **Dark Mode Support** - Easy on the eyes for late-night coding
+- 💯 **100% Free** - No paywalls, no subscriptions, no ads
 
-**Use Lovable**
+## 🚀 Getting Started
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### Prerequisites
 
-Changes made via Lovable will be committed automatically to this repo.
+- Node.js 18+ 
+- npm or bun
 
-**Use your preferred IDE**
+### Installation
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/pyquest-adventures.git
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+# Navigate to project directory
+cd pyquest-adventures
 
-Follow these steps:
+# Install dependencies
+npm install
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 🎓 Learning Path
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+1. **Village of Variables** - Learn about magic boxes (variables)
+2. **Forest of If-Else** - Master decision-making with conditionals
+3. **Loop Mountains** - Discover the power of repetition
+4. **Function Castle** - Create reusable spell books (functions)
+5. **Dragon of Debugging** - Defeat bugs and fix broken code
 
-**Use GitHub Codespaces**
+## 🛠️ Tech Stack
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, shadcn/ui
+- **Routing**: React Router
+- **State**: React Context + localStorage
 
-## What technologies are used for this project?
+## 📜 License
 
-This project is built with:
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+**You are free to:**
+- ✅ Use it commercially
+- ✅ Modify it however you want
+- ✅ Distribute it freely
+- ✅ Use it privately
+- ✅ Sublicense it
 
-## How can I deploy this project?
+## 🤝 Contributing
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+Contributions are welcome! Feel free to:
 
-## Can I connect a custom domain to my Lovable project?
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-Yes, you can!
+## 💖 Made For
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- School students learning to code
+- College students starting with Python
+- Absolute beginners with no programming experience
+- Anyone who wants to learn Python through fun stories!
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
+Made with ❤️ for curious minds everywhere
