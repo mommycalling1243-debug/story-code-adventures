@@ -72,9 +72,10 @@ const DailyChallenge: React.FC = () => {
   const [completed, setCompleted] = useState(false);
 
   const { isCompleted, todayChallenge } = getDailyChallengeStatus();
-  const challenge = DAILY_CHALLENGES[todayChallenge % DAILY_CHALLENGES.length];
+  const challengeIndex = (todayChallenge || 0) % DAILY_CHALLENGES.length;
+  const challenge = DAILY_CHALLENGES[challengeIndex];
 
-  const streakBonus = Math.min(state.streak * 5, 50); // Max 50 bonus XP
+  const streakBonus = Math.min((state.streak || 0) * 5, 50); // Max 50 bonus XP
   const totalXp = challenge.xpReward + streakBonus;
 
   const handleSuccess = () => {
