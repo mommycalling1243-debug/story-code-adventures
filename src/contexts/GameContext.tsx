@@ -175,7 +175,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const isCompleted = state.lastDailyChallengeDate === today;
     return { 
       isCompleted, 
-      todayChallenge: state.dailyChallengeIndex 
+      todayChallenge: state.dailyChallengeIndex ?? 0 
     };
   };
 
