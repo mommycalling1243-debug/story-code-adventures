@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import WorldCard from '@/components/WorldCard';
 import PlayerStats from '@/components/PlayerStats';
+import DailyChallenge from '@/components/DailyChallenge';
 import { useGame } from '@/contexts/GameContext';
 import { worlds } from '@/data/worlds';
-import { ArrowLeft, Map } from 'lucide-react';
+import { ArrowLeft, Map, Flame } from 'lucide-react';
 
 const Worlds: React.FC = () => {
   const { state } = useGame();
@@ -60,8 +61,11 @@ const Worlds: React.FC = () => {
             </div>
           </aside>
 
-          {/* World Map */}
-          <section className="lg:col-span-3">
+          {/* Main content */}
+          <section className="lg:col-span-3 space-y-8">
+            {/* Daily Challenge */}
+            <DailyChallenge />
+
             <div className="mb-8">
               <h2 className="text-3xl font-serif font-bold text-foreground mb-2">
                 Your Adventure Awaits
