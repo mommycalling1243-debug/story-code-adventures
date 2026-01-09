@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useGame } from '@/contexts/GameContext';
-import { Lock, CheckCircle, ChevronRight } from 'lucide-react';
+import { CheckCircle, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface WorldCardProps {
@@ -21,27 +21,13 @@ const WorldCard: React.FC<WorldCardProps> = ({
   lessonsCount,
   slug,
 }) => {
-  const { isWorldUnlocked, state } = useGame();
-  const unlocked = isWorldUnlocked(id);
+  const { state } = useGame();
   
   const completedInWorld = state.completedLessons.filter(
     l => l.worldId === slug
   ).length;
 
   const isCompleted = completedInWorld >= lessonsCount;
-
-  if (!unlocked) {
-    return (
-      <div className="relative bg-card/50 rounded-2xl p-6 border-2 border-dashed border-border opacity-60">
-        <div className="absolute top-4 right-4">
-          <Lock className="w-6 h-6 text-muted-foreground" />
-        </div>
-        <div className="text-5xl mb-4 grayscale">{icon}</div>
-        <h3 className="text-xl font-bold text-muted-foreground mb-2">{name}</h3>
-        <p className="text-sm text-muted-foreground">Complete the previous world to unlock</p>
-      </div>
-    );
-  }
 
   return (
     <Link
