@@ -52,16 +52,30 @@ const WorldCard: React.FC<WorldCardProps> = ({
         <div className="text-sm text-muted-foreground">
           {completedInWorld}/{lessonsCount} lessons
         </div>
-        <div className="flex items-center text-primary font-medium text-sm">
-          Enter World
-          <ChevronRight className="w-4 h-4 ml-1" />
+        <div className="flex items-center gap-2">
+          <span className={cn(
+            "text-sm font-bold px-2 py-0.5 rounded-full",
+            isCompleted 
+              ? "bg-primary/20 text-primary" 
+              : "bg-muted text-muted-foreground"
+          )}>
+            {Math.round((completedInWorld / lessonsCount) * 100)}%
+          </span>
+          <div className="flex items-center text-primary font-medium text-sm">
+            <ChevronRight className="w-4 h-4" />
+          </div>
         </div>
       </div>
 
       {/* Progress bar */}
       <div className="mt-3 h-2 bg-muted rounded-full overflow-hidden">
         <div
-          className="h-full bg-primary rounded-full transition-all duration-500"
+          className={cn(
+            "h-full rounded-full transition-all duration-500",
+            isCompleted 
+              ? "bg-gradient-to-r from-primary to-chart-2" 
+              : "bg-primary"
+          )}
           style={{ width: `${(completedInWorld / lessonsCount) * 100}%` }}
         />
       </div>

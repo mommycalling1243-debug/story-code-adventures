@@ -695,7 +695,7 @@ const Lesson: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
   const { completeLesson, earnBadge, unlockWorld, isLessonCompleted } = useGame();
-  const { playLessonCompleteSound } = useSoundEffects();
+  const { playLessonCompleteSound, playBadgeEarnedSound, playWorldUnlockSound } = useSoundEffects();
   
   const [step, setStep] = useState(0);
   const [showXp, setShowXp] = useState(false);
@@ -754,6 +754,7 @@ const Lesson: React.FC = () => {
         const badge = firstLessonBadges[lessonId];
         earnBadge(badge.id);
         setTimeout(() => {
+          playBadgeEarnedSound();
           setShowBadge({ name: badge.name, icon: badge.icon });
         }, 2600);
       }
@@ -774,11 +775,12 @@ const Lesson: React.FC = () => {
       ).length;
       
       if (completedCount === worldLessons.length) {
-        // Award world completion badge
+        // Award world completion badge with sound
         const worldBadge = worldCompletionBadges[world.slug];
         if (worldBadge) {
           earnBadge(worldBadge.id);
           setTimeout(() => {
+            playBadgeEarnedSound();
             setShowBadge({ name: worldBadge.name, icon: worldBadge.icon });
           }, 4000);
         }
@@ -787,6 +789,7 @@ const Lesson: React.FC = () => {
         if (world.slug === 'dragon-of-debugging') {
           earnBadge('python-hero');
           setTimeout(() => {
+            playBadgeEarnedSound();
             setShowBadge({ name: 'Python Hero', icon: '👑' });
           }, 6000);
         }
@@ -795,6 +798,7 @@ const Lesson: React.FC = () => {
         const nextW = worlds.find(w => w.id === world.id + 1);
         if (nextW) {
           setTimeout(() => {
+            playWorldUnlockSound();
             setShowWorldUnlock(nextW.name);
           }, 5000);
         }
