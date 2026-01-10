@@ -138,6 +138,282 @@ print(double_power)`,
     expectedOutput: '',
     hint: "Remember: strings need quotes, numbers don't!"
   },
+  
+  // Forest of If-Else lessons
+  'if-1': {
+    storyTitle: 'The Crossroads',
+    story: [
+      "You've ventured deep into the Forest of If-Else! 🌲",
+      "At a clearing, you find a magical crossroads with two paths. An ancient talking signpost speaks: \"Traveler! The forest changes based on choices. If it's day, take the sunny path. Else, take the moonlit path.\"",
+      "This is the core of the forest's magic—making decisions! Every creature here thinks in 'if this, then that' patterns.",
+      "The signpost continues: \"In this forest, we check conditions. If something is true, one thing happens. If it's false, something else happens. This is how we navigate!\""
+    ],
+    explanationTitle: 'Understanding If-Else',
+    explanation: [
+      "**If statements** let your code make decisions!",
+      "• `if` checks a condition (is something true?)",
+      "• If true → run the indented code below",
+      "• `else` → what happens if the condition is false",
+      "Think of it like: \"IF it's raining, THEN take umbrella, ELSE wear sunglasses\""
+    ],
+    codeExample: `# The forest's decision magic
+weather = "sunny"
+
+if weather == "sunny":
+    print("Take the bright path!")
+else:
+    print("Take the shadowy path!")
+
+# Another decision
+coins = 50
+if coins >= 100:
+    print("You can buy the magic sword!")
+else:
+    print("Keep collecting coins...")`,
+    questTitle: 'Your First Decision',
+    questDescription: "Create a variable `time` set to \"day\" or \"night\". Use if-else to print \"Walk confidently!\" if it's day, else print \"Light your torch!\"",
+    initialCode: `# Set the time
+time = "day"
+
+# Make your decision
+if time == "day":
+    print("Walk confidently!")
+else:
+    print("Light your torch!")`,
+    expectedOutput: '',
+    hint: "Use == (double equals) to compare values, not = (single equals)!"
+  },
+  'if-2': {
+    storyTitle: "The Guard's Question",
+    story: [
+      "Deeper in the forest, a stone guardian blocks your path! 🗿",
+      "\"Answer my riddle,\" it rumbles. \"I will check if your answer is correct. But beware—I check EXACTLY. 'yes' is not the same as 'Yes'!\"",
+      "The guardian explains comparison magic: You can check if things are equal, greater than, less than, or not equal!",
+      "\"Many travelers fail because they forget: comparing uses ==, not =. One equals sign stores a value. Two equals signs ask a question!\""
+    ],
+    explanationTitle: 'Comparison Operators',
+    explanation: [
+      "**Comparison operators** return True or False:",
+      "• `==` → equals (are they the same?)",
+      "• `!=` → not equals (are they different?)",
+      "• `>` → greater than",
+      "• `<` → less than",
+      "• `>=` → greater than or equal",
+      "• `<=` → less than or equal"
+    ],
+    codeExample: `# The guardian's tests
+player_level = 5
+required_level = 3
+
+# Check if player can pass
+if player_level >= required_level:
+    print("You may pass, brave one!")
+else:
+    print("Train more, young one.")
+
+# Check exact answer
+password = "magic"
+if password == "magic":
+    print("Correct! The door opens.")`,
+    questTitle: 'Answer the Guardian',
+    questDescription: "Create a variable `answer` with a number. Check if it's greater than 10. If yes, print \"Correct!\", else print \"Try again!\"",
+    initialCode: `# Your answer to the riddle
+answer = 15
+
+# The guardian checks
+if answer > 10:
+    print("Correct!")
+else:
+    print("Try again!")`,
+    expectedOutput: '',
+    hint: "Use > to check if something is greater than another value!"
+  },
+  'if-3': {
+    storyTitle: 'Multiple Paths',
+    story: [
+      "You reach the heart of the forest—a mystical clearing with THREE paths! 🌟",
+      "A wise owl perches above: \"Sometimes life has more than two choices! The forest spirits use 'elif' for extra paths.\"",
+      "\"First, check the main 'if'. If false, check 'elif' (short for else-if). You can have many elifs! Finally, 'else' catches everything remaining.\"",
+      "The owl hoots wisely: \"Think of a treasure chest. Is it gold? Is it silver? Is it bronze? Or is it something else entirely?\""
+    ],
+    explanationTitle: 'Multiple Conditions with elif',
+    explanation: [
+      "**elif** means 'else if' — check another condition!",
+      "• `if` → check first condition",
+      "• `elif` → if first was false, check this condition",
+      "• `elif` → can have many of these!",
+      "• `else` → if ALL conditions were false, do this",
+      "Python checks from top to bottom and stops at the first true condition!"
+    ],
+    codeExample: `# The three paths
+treasure_type = "gold"
+
+if treasure_type == "gold":
+    print("Incredible! +100 coins!")
+elif treasure_type == "silver":
+    print("Great find! +50 coins!")
+elif treasure_type == "bronze":
+    print("Not bad! +20 coins!")
+else:
+    print("Just an empty chest...")
+
+# Grade checker
+score = 85
+if score >= 90:
+    print("Grade: A")
+elif score >= 80:
+    print("Grade: B")
+elif score >= 70:
+    print("Grade: C")
+else:
+    print("Keep studying!")`,
+    questTitle: 'The Three Treasures',
+    questDescription: "Create a score variable. Use if-elif-else to print \"Champion!\" for 100, \"Great!\" for 50 or more, else \"Keep going!\"",
+    initialCode: `# Your score
+score = 75
+
+# Check your rank
+if score == 100:
+    print("Champion!")
+elif score >= 50:
+    print("Great!")
+else:
+    print("Keep going!")`,
+    expectedOutput: '',
+    hint: "Check for exact 100 first with ==, then use >= for 50 or more!"
+  },
+
+  // Loop Mountains lessons
+  'loop-1': {
+    storyTitle: 'The Training Grounds',
+    story: [
+      "Welcome to Loop Mountains! ⛰️ The air is thin but magical here.",
+      "At the training grounds, Master Loop demonstrates her power: She waves her staff and creates 10 identical training dummies instantly!",
+      "\"In the old days,\" she says, \"wizards wrote the same spell 10 times. How tedious! With loops, we write once and repeat as many times as we want!\"",
+      "She shows you the 'for loop'—a spell that repeats automatically. \"Tell it how many times, and it does the work. This is the secret of Loop Mountains!\""
+    ],
+    explanationTitle: 'The Power of For Loops',
+    explanation: [
+      "**For loops** repeat code a specific number of times!",
+      "• `for` starts the loop",
+      "• `range(n)` creates numbers from 0 to n-1",
+      "• The indented code runs for each number",
+      "`for i in range(5):` → runs 5 times (i = 0, 1, 2, 3, 4)",
+      "Think: \"FOR each number in this RANGE, do this action\""
+    ],
+    codeExample: `# Master Loop's demonstration
+print("Creating training dummies:")
+for i in range(5):
+    print("Dummy", i + 1, "appears!")
+
+# Practice swings
+print("Practice time:")
+for swing in range(3):
+    print("Swing!")
+
+print("Training complete!")`,
+    questTitle: 'Your Training Begins',
+    questDescription: "Use a for loop to print \"Training!\" exactly 4 times. The mountain spirits are watching!",
+    initialCode: `# Begin your training
+for i in range(4):
+    print("Training!")
+
+print("Well done, apprentice!")`,
+    expectedOutput: '',
+    hint: "range(4) will make the loop run 4 times: 0, 1, 2, 3"
+  },
+  'loop-2': {
+    storyTitle: 'Counting Steps',
+    story: [
+      "You begin climbing the mountain path. Each step must be counted! 🥾",
+      "An old mountain guide appears: \"The 'range' spell is more powerful than you know! You can start from any number, end at any number, and even skip steps!\"",
+      "He demonstrates: \"range(1, 6) counts from 1 to 5. range(0, 10, 2) counts 0, 2, 4, 6, 8—jumping by 2 each time!\"",
+      "\"Master the range, master the mountain!\" he declares, his voice echoing across the peaks."
+    ],
+    explanationTitle: 'Advanced Range Magic',
+    explanation: [
+      "**range()** has three forms:",
+      "• `range(stop)` → 0 to stop-1",
+      "• `range(start, stop)` → start to stop-1",
+      "• `range(start, stop, step)` → start to stop-1, jumping by step",
+      "Examples:",
+      "`range(5)` → 0, 1, 2, 3, 4",
+      "`range(1, 6)` → 1, 2, 3, 4, 5",
+      "`range(0, 10, 2)` → 0, 2, 4, 6, 8"
+    ],
+    codeExample: `# Counting your steps up the mountain
+print("Climbing steps 1 to 5:")
+for step in range(1, 6):
+    print("Step", step)
+
+# Counting by twos
+print("Even numbered steps:")
+for even in range(2, 11, 2):
+    print("Step", even)
+
+# Countdown!
+print("Countdown:")
+for num in range(5, 0, -1):
+    print(num)
+print("Blast off!")`,
+    questTitle: 'Count the Steps',
+    questDescription: "Use range with a start and stop to count from 1 to 5, printing each step number!",
+    initialCode: `# Count steps 1 to 5
+for step in range(1, 6):
+    print("Step", step)
+
+print("Reached the checkpoint!")`,
+    expectedOutput: '',
+    hint: "range(1, 6) gives you 1, 2, 3, 4, 5 — the stop value is not included!"
+  },
+  'loop-3': {
+    storyTitle: 'Breaking Free',
+    story: [
+      "At the summit, you find a mysterious while loop cave! 🌙",
+      "A crystal golem guards the entrance: \"The 'while' loop is different. It repeats WHILE a condition is true. It could run forever... unless you know when to break!\"",
+      "\"Some loops must be escaped,\" the golem warns. \"The 'break' command shatters any loop instantly. 'continue' skips to the next round. Use them wisely!\"",
+      "You step into the cave, ready to master the most powerful loop magic of all."
+    ],
+    explanationTitle: 'While Loops and Control',
+    explanation: [
+      "**While loops** repeat while a condition is True!",
+      "• `while condition:` → keeps running while condition is True",
+      "• Be careful! If condition never becomes False, loop runs forever!",
+      "**Loop controls:**",
+      "• `break` → exit the loop immediately",
+      "• `continue` → skip to next iteration",
+      "Always make sure your while loop can eventually stop!"
+    ],
+    codeExample: `# The while loop cave
+energy = 5
+
+while energy > 0:
+    print("Exploring... Energy:", energy)
+    energy = energy - 1
+
+print("Need to rest!")
+
+# Finding treasure with break
+for chest in range(1, 10):
+    print("Opening chest", chest)
+    if chest == 3:
+        print("Found the treasure!")
+        break
+
+print("Adventure complete!")`,
+    questTitle: 'Escape the Cave',
+    questDescription: "Create a while loop that counts down from 3 to 1, printing each number. Make sure it stops!",
+    initialCode: `# Countdown to escape
+countdown = 3
+
+while countdown > 0:
+    print(countdown)
+    countdown = countdown - 1
+
+print("Escaped!")`,
+    expectedOutput: '',
+    hint: "Make sure to decrease the countdown inside the loop, or it will run forever!"
+  },
 };
 
 const Lesson: React.FC = () => {
