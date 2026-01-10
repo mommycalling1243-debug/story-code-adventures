@@ -39,11 +39,22 @@ const LEVELS = [
 ];
 
 const INITIAL_BADGES: Badge[] = [
+  // First lesson badges
   { id: 'variable-starter', name: 'Variable Starter', description: 'Created your first magic box', icon: '📦', earned: false },
   { id: 'decision-maker', name: 'Decision Maker', description: 'Made your first choice', icon: '🔀', earned: false },
-  { id: 'loop-hero', name: 'Loop Hero', description: 'Mastered the art of repetition', icon: '🔄', earned: false },
-  { id: 'spell-fixer', name: 'Spell Fixer', description: 'Fixed a broken spell', icon: '🔧', earned: false },
-  { id: 'story-master', name: 'Story Master', description: 'Completed all story chapters', icon: '📚', earned: false },
+  { id: 'loop-apprentice', name: 'Loop Apprentice', description: 'Started climbing the mountains', icon: '🥾', earned: false },
+  { id: 'spell-writer', name: 'Spell Writer', description: 'Wrote your first function', icon: '📜', earned: false },
+  { id: 'bug-hunter', name: 'Bug Hunter', description: 'Found your first bug', icon: '🔍', earned: false },
+  
+  // World completion badges
+  { id: 'village-master', name: 'Village Master', description: 'Mastered all variables in the village', icon: '🏘️', earned: false },
+  { id: 'forest-explorer', name: 'Forest Explorer', description: 'Conquered all paths in the forest', icon: '🌲', earned: false },
+  { id: 'loop-hero', name: 'Loop Hero', description: 'Reached the summit of Loop Mountains', icon: '⛰️', earned: false },
+  { id: 'castle-knight', name: 'Castle Knight', description: 'Mastered all spells in the castle', icon: '🏰', earned: false },
+  { id: 'dragon-slayer', name: 'Dragon Slayer', description: 'Defeated the Dragon of Debugging', icon: '🐉', earned: false },
+  
+  // Ultimate badge
+  { id: 'python-hero', name: 'Python Hero', description: 'Completed the entire PyQuest adventure!', icon: '👑', earned: false },
 ];
 
 const INITIAL_STATE: GameState = {

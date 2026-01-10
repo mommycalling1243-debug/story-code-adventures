@@ -414,6 +414,281 @@ print("Escaped!")`,
     expectedOutput: '',
     hint: "Make sure to decrease the countdown inside the loop, or it will run forever!"
   },
+
+  // Function Castle lessons
+  'func-1': {
+    storyTitle: 'Writing Spell Books',
+    story: [
+      "Welcome to Function Castle! 🏰 The towers gleam with magical energy.",
+      "The Court Wizard greets you: \"Here we write spell books—collections of instructions that can be used again and again! We call them 'functions'.\"",
+      "\"Instead of writing the same spell repeatedly, you write it once in a spell book. Then you just say its name to cast it!\"",
+      "She opens an ancient tome: \"To create a spell book, use 'def' (short for define), give it a name, add parentheses, and a colon. The spell instructions go indented below!\""
+    ],
+    explanationTitle: 'Creating Functions',
+    explanation: [
+      "**Functions** are reusable blocks of code!",
+      "• `def` → keyword to define a function",
+      "• Function name → what you call it",
+      "• `()` → parentheses (can hold ingredients later)",
+      "• `:` → starts the function body",
+      "• Indented code → what the function does",
+      "Call a function by writing its name with `()`"
+    ],
+    codeExample: `# Creating a spell book (function)
+def greet_hero():
+    print("Welcome, brave adventurer!")
+    print("May your code be bug-free!")
+
+# Casting the spell (calling the function)
+greet_hero()
+greet_hero()  # Can use it many times!
+
+# Another spell book
+def celebrate():
+    print("🎉 Victory!")
+    print("You did it!")
+
+celebrate()`,
+    questTitle: 'Your First Spell Book',
+    questDescription: "Create a function called `battle_cry` that prints \"For glory!\" when called. Then call it!",
+    initialCode: `# Write your spell book
+def battle_cry():
+    print("For glory!")
+
+# Cast the spell
+battle_cry()`,
+    expectedOutput: '',
+    hint: "Don't forget the colon after the function name, and indent the print statement!"
+  },
+  'func-2': {
+    storyTitle: 'Spell Ingredients',
+    story: [
+      "In the castle's alchemy lab, you learn about spell ingredients! 🧪",
+      "\"Some spells need ingredients to work,\" the alchemist explains. \"We call these 'parameters'. They go inside the parentheses!\"",
+      "\"When you cast the spell, you provide the actual ingredients—we call those 'arguments'. The spell uses whatever you give it!\"",
+      "She demonstrates: \"A greeting spell that takes a name can greet anyone—just give it a different name each time!\""
+    ],
+    explanationTitle: 'Parameters and Arguments',
+    explanation: [
+      "**Parameters** are variables that receive values when called!",
+      "• Define with: `def greet(name):` ← 'name' is a parameter",
+      "• Call with: `greet(\"Alice\")` ← 'Alice' is an argument",
+      "• Multiple parameters: `def add(a, b):`",
+      "• Call with multiple: `add(5, 3)`",
+      "Parameters let functions work with different data each time!"
+    ],
+    codeExample: `# Spell with one ingredient
+def greet(hero_name):
+    print("Hello,", hero_name)
+
+greet("Arthur")
+greet("Merlin")
+
+# Spell with two ingredients
+def power_up(hero, boost):
+    print(hero, "gains", boost, "power!")
+
+power_up("Knight", 50)
+power_up("Wizard", 100)`,
+    questTitle: 'Add Ingredients',
+    questDescription: "Create a function `welcome` that takes a `name` parameter and prints \"Welcome, \" followed by the name. Call it with your name!",
+    initialCode: `# Spell with an ingredient
+def welcome(name):
+    print("Welcome,", name)
+
+# Cast with your name
+welcome("Hero")`,
+    expectedOutput: '',
+    hint: "The parameter goes inside the parentheses in the def line!"
+  },
+  'func-3': {
+    storyTitle: 'Returning Gifts',
+    story: [
+      "In the castle treasury, you discover the secret of returning gifts! 🎁",
+      "The Treasurer speaks: \"The most powerful spell books don't just do things—they give something back! We use 'return' to send a value back.\"",
+      "\"Think of it like sending a messenger. The function does its work, then 'returns' with an answer you can use!\"",
+      "\"You can store what comes back in a variable, or use it directly. This makes functions incredibly powerful!\""
+    ],
+    explanationTitle: 'The Return Statement',
+    explanation: [
+      "**return** sends a value back from a function!",
+      "• `return value` → sends value back to caller",
+      "• Store result: `result = my_function()`",
+      "• Use directly: `print(my_function())`",
+      "• After return, function stops immediately",
+      "Functions can calculate and return answers!"
+    ],
+    codeExample: `# A function that returns a gift
+def double(number):
+    result = number * 2
+    return result
+
+# Catch the returned gift
+answer = double(5)
+print("Double of 5 is:", answer)
+
+# Use directly
+print("Double of 10 is:", double(10))
+
+# Calculate total gold
+def calculate_reward(monsters, gold_each):
+    return monsters * gold_each
+
+total = calculate_reward(3, 50)
+print("You earned", total, "gold!")`,
+    questTitle: 'Return the Treasure',
+    questDescription: "Create a function `triple` that takes a number and returns it multiplied by 3. Print the result of triple(4)!",
+    initialCode: `# Function that returns triple
+def triple(number):
+    return number * 3
+
+# Get the answer
+result = triple(4)
+print(result)`,
+    expectedOutput: '',
+    hint: "Use 'return number * 3' to send back the tripled value!"
+  },
+
+  // Dragon of Debugging lessons
+  'debug-1': {
+    storyTitle: 'Finding Mistakes',
+    story: [
+      "You enter the Dragon's Domain! 🐉 But first, you must learn to spot errors.",
+      "A young dragon named Bugsy greets you: \"Even the best wizards make mistakes! The key is learning to find and fix them.\"",
+      "\"There are three types of bugs: Syntax errors (spelling mistakes in spells), Runtime errors (spells that explode mid-cast), and Logic errors (spells that work but do the wrong thing).\"",
+      "\"Python tries to help! It shows error messages pointing to the problem. Learn to read them!\""
+    ],
+    explanationTitle: 'Types of Errors',
+    explanation: [
+      "**Syntax Errors** → Python can't understand your code",
+      "• Missing colons, parentheses, quotes",
+      "• Misspelled keywords (pritn instead of print)",
+      "**Runtime Errors** → Code crashes while running",
+      "• Dividing by zero, using undefined variables",
+      "**Logic Errors** → Code runs but gives wrong answer",
+      "• Using + instead of *, wrong variable names",
+      "Read error messages carefully—they tell you the line number!"
+    ],
+    codeExample: `# Fixed syntax error (was missing colon)
+if True:
+    print("Spell works!")
+
+# Fixed runtime error (was dividing by zero)
+total = 100
+parts = 4  # Changed from 0
+result = total / parts
+print(result)
+
+# Fixed logic error (was using wrong operator)
+price = 10
+quantity = 5
+total = price * quantity  # Was + instead of *
+print("Total:", total)`,
+    questTitle: 'Spot the Bug',
+    questDescription: "The code below has a bug—'prnt' should be 'print'. Fix it so the spell works!",
+    initialCode: `# Fix the bug!
+message = "Dragon defeated!"
+print(message)`,
+    expectedOutput: '',
+    hint: "Check the spelling of 'print' carefully!"
+  },
+  'debug-2': {
+    storyTitle: "The Dragon's Riddles",
+    story: [
+      "The great dragon presents you with broken code riddles! 🔥",
+      "\"Each riddle contains a bug,\" the dragon growls. \"Fix them to prove your worth!\"",
+      "\"Remember: Check your indentation—Python is picky about spaces. Check your operators—== for comparing, = for assigning. Check your quotes—they must match!\"",
+      "\"Use print statements to see what your variables contain. This is called 'debugging with print'—a powerful technique!\""
+    ],
+    explanationTitle: 'Debugging Techniques',
+    explanation: [
+      "**Common fixes:**",
+      "• Indentation: Use consistent spaces (4 spaces recommended)",
+      "• Quotes: Start and end with same type (' or \")",
+      "• Parentheses: Every ( needs a )",
+      "**Debug with print:**",
+      "• Add `print(variable)` to see values",
+      "• Print before and after operations",
+      "• Remove debug prints when done!"
+    ],
+    codeExample: `# Debugging with print statements
+def calculate_score(hits, misses):
+    print("Hits:", hits)  # Debug: see the value
+    print("Misses:", misses)  # Debug: see the value
+    
+    score = hits * 10 - misses * 5
+    print("Score calculated:", score)  # Debug
+    return score
+
+result = calculate_score(5, 2)
+print("Final score:", result)
+
+# Fixed indentation
+for i in range(3):
+    print("Attempt", i + 1)
+    print("Trying...")`,
+    questTitle: 'Solve the Riddle',
+    questDescription: "Fix the indentation error in this loop so it prints numbers 1, 2, 3!",
+    initialCode: `# Fix the indentation
+for i in range(1, 4):
+    print(i)`,
+    expectedOutput: '',
+    hint: "The print statement needs to be indented inside the for loop!"
+  },
+  'debug-3': {
+    storyTitle: 'Becoming a Hero',
+    story: [
+      "The final challenge! The dragon bows before you. 👑",
+      "\"You have learned the ways of Python, young one. Variables, decisions, loops, functions, and debugging—you know them all!\"",
+      "\"But a true hero combines everything. Write code that uses all your skills together!\"",
+      "\"Go forth and create! Remember: every master was once a beginner. Keep coding, keep learning, and never fear the bugs!\""
+    ],
+    explanationTitle: 'Putting It All Together',
+    explanation: [
+      "You've learned so much! Let's combine everything:",
+      "• **Variables** → Store your data",
+      "• **If-Else** → Make decisions",
+      "• **Loops** → Repeat actions",
+      "• **Functions** → Organize and reuse code",
+      "• **Debugging** → Find and fix problems",
+      "Real programs use ALL of these together!"
+    ],
+    codeExample: `# A complete mini-program using everything!
+def battle(hero_power, monster_power):
+    if hero_power > monster_power:
+        return "Victory!"
+    elif hero_power == monster_power:
+        return "Draw!"
+    else:
+        return "Retreat!"
+
+# Variables
+hero = "Brave Coder"
+power = 50
+
+# Loop through battles
+for monster in range(1, 4):
+    monster_power = monster * 15
+    print("Battle", monster)
+    result = battle(power, monster_power)
+    print(result)
+
+print("Adventure complete!")`,
+    questTitle: 'The Final Challenge',
+    questDescription: "You've mastered Python basics! Create a function that takes a number and returns \"Hero!\" if it's greater than 50, else \"Training...\"",
+    initialCode: `# Your final spell!
+def check_power(power):
+    if power > 50:
+        return "Hero!"
+    else:
+        return "Training..."
+
+# Test your spell
+result = check_power(75)
+print(result)`,
+    expectedOutput: '',
+    hint: "Use an if-else inside your function with a return statement!"
+  },
 };
 
 const Lesson: React.FC = () => {
@@ -466,13 +741,31 @@ const Lesson: React.FC = () => {
       playLessonCompleteSound();
       completeLesson(lesson.id, world.slug, lesson.xp);
       
-      // Check if this was the first lesson - earn badge
-      if (lessonId === 'var-1') {
-        earnBadge('variable-starter');
+      // First lesson badges for each world
+      const firstLessonBadges: Record<string, { id: string; name: string; icon: string }> = {
+        'var-1': { id: 'variable-starter', name: 'Variable Starter', icon: '📦' },
+        'if-1': { id: 'decision-maker', name: 'Decision Maker', icon: '🔀' },
+        'loop-1': { id: 'loop-apprentice', name: 'Loop Apprentice', icon: '🥾' },
+        'func-1': { id: 'spell-writer', name: 'Spell Writer', icon: '📜' },
+        'debug-1': { id: 'bug-hunter', name: 'Bug Hunter', icon: '🔍' },
+      };
+      
+      if (lessonId && firstLessonBadges[lessonId]) {
+        const badge = firstLessonBadges[lessonId];
+        earnBadge(badge.id);
         setTimeout(() => {
-          setShowBadge({ name: 'Variable Starter', icon: '📦' });
+          setShowBadge({ name: badge.name, icon: badge.icon });
         }, 2600);
       }
+      
+      // World completion badges
+      const worldCompletionBadges: Record<string, { id: string; name: string; icon: string }> = {
+        'village-of-variables': { id: 'village-master', name: 'Village Master', icon: '🏘️' },
+        'forest-of-if-else': { id: 'forest-explorer', name: 'Forest Explorer', icon: '🌲' },
+        'loop-mountains': { id: 'loop-hero', name: 'Loop Hero', icon: '⛰️' },
+        'function-castle': { id: 'castle-knight', name: 'Castle Knight', icon: '🏰' },
+        'dragon-of-debugging': { id: 'dragon-slayer', name: 'Dragon Slayer', icon: '🐉' },
+      };
       
       // Check if this completes the world
       const worldLessons = world.lessons;
@@ -481,12 +774,29 @@ const Lesson: React.FC = () => {
       ).length;
       
       if (completedCount === worldLessons.length) {
+        // Award world completion badge
+        const worldBadge = worldCompletionBadges[world.slug];
+        if (worldBadge) {
+          earnBadge(worldBadge.id);
+          setTimeout(() => {
+            setShowBadge({ name: worldBadge.name, icon: worldBadge.icon });
+          }, 4000);
+        }
+        
+        // Check if ALL worlds are complete for Python Hero badge
+        if (world.slug === 'dragon-of-debugging') {
+          earnBadge('python-hero');
+          setTimeout(() => {
+            setShowBadge({ name: 'Python Hero', icon: '👑' });
+          }, 6000);
+        }
+        
         unlockWorld(world.id + 1);
         const nextW = worlds.find(w => w.id === world.id + 1);
         if (nextW) {
           setTimeout(() => {
             setShowWorldUnlock(nextW.name);
-          }, 3000);
+          }, 5000);
         }
       }
     }
