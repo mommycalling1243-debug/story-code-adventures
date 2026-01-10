@@ -6,7 +6,7 @@ import PlayerStats from '@/components/PlayerStats';
 import DailyChallenge from '@/components/DailyChallenge';
 import { useGame } from '@/contexts/GameContext';
 import { worlds } from '@/data/worlds';
-import { ArrowLeft, Map, Flame } from 'lucide-react';
+import { ArrowLeft, Map, Flame, Trophy } from 'lucide-react';
 
 const Worlds: React.FC = () => {
   const { state } = useGame();
@@ -40,10 +40,18 @@ const Worlds: React.FC = () => {
               <PlayerStats />
               
               {/* Badges Preview */}
-              <div className="mt-6 bg-card rounded-xl p-4 border border-border">
-                <h3 className="font-bold text-foreground mb-3">🏆 Your Badges</h3>
+              <Link to="/badges" className="block mt-6 bg-card rounded-xl p-4 border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-md">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-bold text-foreground flex items-center gap-2">
+                    <Trophy className="w-4 h-4 text-primary" />
+                    Your Badges
+                  </h3>
+                  <span className="text-xs text-primary font-medium">
+                    {state.badges.filter(b => b.earned).length}/{state.badges.length}
+                  </span>
+                </div>
                 <div className="flex flex-wrap gap-2">
-                  {state.badges.map((badge) => (
+                  {state.badges.slice(0, 8).map((badge) => (
                     <div
                       key={badge.id}
                       className={`w-10 h-10 rounded-full flex items-center justify-center text-lg ${
@@ -56,8 +64,16 @@ const Worlds: React.FC = () => {
                       {badge.icon}
                     </div>
                   ))}
+                  {state.badges.length > 8 && (
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm bg-muted text-muted-foreground">
+                      +{state.badges.length - 8}
+                    </div>
+                  )}
                 </div>
-              </div>
+                <p className="text-xs text-muted-foreground mt-3 text-center">
+                  Click to view all badges →
+                </p>
+              </Link>
             </div>
           </aside>
 
