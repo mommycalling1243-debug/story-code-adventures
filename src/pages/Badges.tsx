@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useGame } from '@/contexts/GameContext';
 import useSoundEffects from '@/hooks/useSoundEffects';
-import { ArrowLeft, Lock, Trophy, Sparkles } from 'lucide-react';
+import { ArrowLeft, Lock, Trophy, Sparkles, Flame, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Badges: React.FC = () => {
@@ -25,6 +25,14 @@ const Badges: React.FC = () => {
   
   const ultimateBadges = state.badges.filter(b => 
     ['python-hero'].includes(b.id)
+  );
+  
+  const streakBadges = state.badges.filter(b => 
+    ['streak-3', 'streak-7', 'streak-14', 'streak-30'].includes(b.id)
+  );
+  
+  const dailyChallengeBadges = state.badges.filter(b => 
+    ['daily-5', 'daily-15', 'daily-30'].includes(b.id)
   );
 
   return (
@@ -115,6 +123,38 @@ const Badges: React.FC = () => {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {worldCompletionBadges.map(badge => (
+              <BadgeCard key={badge.id} badge={badge} />
+            ))}
+          </div>
+        </section>
+
+        {/* Streak Badges */}
+        <section className="mb-12">
+          <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+            <Flame className="w-5 h-5 text-orange-500" />
+            Streak Achievements
+            <span className="text-sm font-normal text-muted-foreground ml-2">
+              (Earned by completing daily challenges on consecutive days)
+            </span>
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {streakBadges.map(badge => (
+              <BadgeCard key={badge.id} badge={badge} />
+            ))}
+          </div>
+        </section>
+
+        {/* Daily Challenge Badges */}
+        <section className="mb-12">
+          <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+            <Target className="w-5 h-5 text-primary" />
+            Daily Champion
+            <span className="text-sm font-normal text-muted-foreground ml-2">
+              (Earned by completing daily challenges)
+            </span>
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {dailyChallengeBadges.map(badge => (
               <BadgeCard key={badge.id} badge={badge} />
             ))}
           </div>
