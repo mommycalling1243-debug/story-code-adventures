@@ -8,6 +8,7 @@ interface InteractiveCodeEditorProps {
   initialCode: string;
   expectedOutput?: string;
   onSuccess?: () => void;
+  onSubmit?: () => void;
   hint?: string;
   showSubmitOnSuccess?: boolean;
 }
@@ -16,9 +17,18 @@ const InteractiveCodeEditor: React.FC<InteractiveCodeEditorProps> = ({
   initialCode,
   expectedOutput,
   onSuccess,
+  onSubmit,
   hint,
   showSubmitOnSuccess = true,
 }) => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = () => {
+    if (!isSubmitted) {
+      setIsSubmitted(true);
+      onSubmit?.();
+    }
+  };
   const [code, setCode] = useState(initialCode);
   const [output, setOutput] = useState<string>('');
   const [isSuccess, setIsSuccess] = useState(false);
@@ -136,14 +146,21 @@ const InteractiveCodeEditor: React.FC<InteractiveCodeEditorProps> = ({
                 <CheckCircle2 className="w-5 h-5" />
                 Wonderful! Your spell worked perfectly!
               </p>
-              {showSubmitOnSuccess && (
+              {showSubmitOnSuccess && !isSubmitted && (
                 <Button
                   size="sm"
+                  onClick={handleSubmit}
                   className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
                   <Send className="w-4 h-4 mr-2" />
                   Submit Solution
                 </Button>
+              )}
+              {isSubmitted && (
+                <div className="flex items-center gap-2 text-primary font-medium">
+                  <CheckCircle2 className="w-5 h-5" />
+                  Solution Submitted!
+                </div>
               )}
             </div>
           )}

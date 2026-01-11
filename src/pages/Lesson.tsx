@@ -694,7 +694,7 @@ print(result)`,
 const Lesson: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
-  const { completeLesson, earnBadge, unlockWorld, isLessonCompleted } = useGame();
+  const { state, completeLesson, earnBadge, unlockWorld, isLessonCompleted } = useGame();
   const { playLessonCompleteSound, playBadgeEarnedSound, playWorldUnlockSound } = useSoundEffects();
   
   const [step, setStep] = useState(0);
@@ -735,73 +735,81 @@ const Lesson: React.FC = () => {
   const alreadyCompleted = isLessonCompleted(lesson.id);
 
   const handleQuestSuccess = () => {
+    // Mark quest as solved (but don't award XP yet - that happens on submit)
     if (!questCompleted && !alreadyCompleted) {
       setQuestCompleted(true);
-      setShowXp(true);
-      playLessonCompleteSound();
-      completeLesson(lesson.id, world.slug, lesson.xp);
-      
-      // First lesson badges for each world
-      const firstLessonBadges: Record<string, { id: string; name: string; icon: string }> = {
-        'var-1': { id: 'variable-starter', name: 'Variable Starter', icon: '📦' },
-        'if-1': { id: 'decision-maker', name: 'Decision Maker', icon: '🔀' },
-        'loop-1': { id: 'loop-apprentice', name: 'Loop Apprentice', icon: '🥾' },
-        'func-1': { id: 'spell-writer', name: 'Spell Writer', icon: '📜' },
-        'debug-1': { id: 'bug-hunter', name: 'Bug Hunter', icon: '🔍' },
-      };
-      
-      if (lessonId && firstLessonBadges[lessonId]) {
-        const badge = firstLessonBadges[lessonId];
-        earnBadge(badge.id);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (alreadyCompleted) return;
+    
+    setShowXp(true);
+    playLessonCompleteSound();
+    completeLesson(lesson.id, String(world.id), lesson.xp);
+    
+    // First lesson badges for each world
+    const firstLessonBadges: Record<string, { id: string; name: string; icon: string }> = {
+      'var-1': { id: 'variable-starter', name: 'Variable Starter', icon: '📦' },
+      'if-1': { id: 'decision-maker', name: 'Decision Maker', icon: '🔀' },
+      'loop-1': { id: 'loop-apprentice', name: 'Loop Apprentice', icon: '🥾' },
+      'func-1': { id: 'spell-writer', name: 'Spell Writer', icon: '📜' },
+      'debug-1': { id: 'bug-hunter', name: 'Bug Hunter', icon: '🔍' },
+    };
+    
+    if (lessonId && firstLessonBadges[lessonId]) {
+      const badge = firstLessonBadges[lessonId];
+      earnBadge(badge.id);
+      setTimeout(() => {
+        playBadgeEarnedSound();
+        setShowBadge({ name: badge.name, icon: badge.icon });
+      }, 2600);
+    }
+    
+    // World completion badges
+    const worldCompletionBadges: Record<string, { id: string; name: string; icon: string }> = {
+      'village-of-variables': { id: 'village-master', name: 'Village Master', icon: '🏘️' },
+      'forest-of-if-else': { id: 'forest-explorer', name: 'Forest Explorer', icon: '🌲' },
+      'loop-mountains': { id: 'loop-hero', name: 'Loop Hero', icon: '⛰️' },
+      'function-castle': { id: 'castle-knight', name: 'Castle Knight', icon: '🏰' },
+      'dragon-of-debugging': { id: 'dragon-slayer', name: 'Dragon Slayer', icon: '🐉' },
+    };
+    
+    // Check if this completes the world (include current lesson + already completed ones)
+    const completedLessonIds = new Set(
+      state.completedLessons
+        .filter(l => l.worldId === String(world.id))
+        .map(l => l.lessonId)
+    );
+    completedLessonIds.add(lesson.id);
+    
+    if (completedLessonIds.size === world.lessons.length) {
+      // Award world completion badge with sound
+      const worldBadge = worldCompletionBadges[world.slug];
+      if (worldBadge) {
+        earnBadge(worldBadge.id);
         setTimeout(() => {
           playBadgeEarnedSound();
-          setShowBadge({ name: badge.name, icon: badge.icon });
-        }, 2600);
+          setShowBadge({ name: worldBadge.name, icon: worldBadge.icon });
+        }, 4000);
       }
       
-      // World completion badges
-      const worldCompletionBadges: Record<string, { id: string; name: string; icon: string }> = {
-        'village-of-variables': { id: 'village-master', name: 'Village Master', icon: '🏘️' },
-        'forest-of-if-else': { id: 'forest-explorer', name: 'Forest Explorer', icon: '🌲' },
-        'loop-mountains': { id: 'loop-hero', name: 'Loop Hero', icon: '⛰️' },
-        'function-castle': { id: 'castle-knight', name: 'Castle Knight', icon: '🏰' },
-        'dragon-of-debugging': { id: 'dragon-slayer', name: 'Dragon Slayer', icon: '🐉' },
-      };
+      // Check if ALL worlds are complete for Python Hero badge
+      if (world.slug === 'dragon-of-debugging') {
+        earnBadge('python-hero');
+        setTimeout(() => {
+          playBadgeEarnedSound();
+          setShowBadge({ name: 'Python Hero', icon: '👑' });
+        }, 6000);
+      }
       
-      // Check if this completes the world
-      const worldLessons = world.lessons;
-      const completedCount = worldLessons.filter((l, i) => 
-        i < lessonIndex || l.id === lesson.id
-      ).length;
-      
-      if (completedCount === worldLessons.length) {
-        // Award world completion badge with sound
-        const worldBadge = worldCompletionBadges[world.slug];
-        if (worldBadge) {
-          earnBadge(worldBadge.id);
-          setTimeout(() => {
-            playBadgeEarnedSound();
-            setShowBadge({ name: worldBadge.name, icon: worldBadge.icon });
-          }, 4000);
-        }
-        
-        // Check if ALL worlds are complete for Python Hero badge
-        if (world.slug === 'dragon-of-debugging') {
-          earnBadge('python-hero');
-          setTimeout(() => {
-            playBadgeEarnedSound();
-            setShowBadge({ name: 'Python Hero', icon: '👑' });
-          }, 6000);
-        }
-        
-        unlockWorld(world.id + 1);
-        const nextW = worlds.find(w => w.id === world.id + 1);
-        if (nextW) {
-          setTimeout(() => {
-            playWorldUnlockSound();
-            setShowWorldUnlock(nextW.name);
-          }, 5000);
-        }
+      unlockWorld(world.id + 1);
+      const nextW = worlds.find(w => w.id === world.id + 1);
+      if (nextW) {
+        setTimeout(() => {
+          playWorldUnlockSound();
+          setShowWorldUnlock(nextW.name);
+        }, 5000);
       }
     }
   };
@@ -934,7 +942,9 @@ const Lesson: React.FC = () => {
               initialCode={content.initialCode}
               expectedOutput={content.expectedOutput}
               onSuccess={handleQuestSuccess}
+              onSubmit={handleSubmit}
               hint={content.hint}
+              showSubmitOnSuccess={!alreadyCompleted}
             />
 
             {(questCompleted || alreadyCompleted) && (
