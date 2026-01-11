@@ -28,6 +28,7 @@ export interface GameState {
   lastPlayedAt?: Date;
   lastDailyChallengeDate?: string;
   dailyChallengeIndex: number;
+  totalDailyChallenges: number;
 }
 
 const LEVELS = [
@@ -55,6 +56,17 @@ const INITIAL_BADGES: Badge[] = [
   
   // Ultimate badge
   { id: 'python-hero', name: 'Python Hero', description: 'Completed the entire PyQuest adventure!', icon: '👑', earned: false },
+  
+  // Streak badges
+  { id: 'streak-3', name: 'Consistent Coder', description: 'Completed challenges 3 days in a row!', icon: '🔥', earned: false },
+  { id: 'streak-7', name: 'Week Warrior', description: 'Maintained a 7-day streak!', icon: '⚡', earned: false },
+  { id: 'streak-14', name: 'Fortnight Fighter', description: 'Kept coding for 14 days straight!', icon: '💪', earned: false },
+  { id: 'streak-30', name: 'Monthly Master', description: 'Achieved a legendary 30-day streak!', icon: '🏆', earned: false },
+  
+  // Daily challenge badges
+  { id: 'daily-5', name: 'Challenge Taker', description: 'Completed 5 daily challenges!', icon: '🎯', earned: false },
+  { id: 'daily-15', name: 'Challenge Champion', description: 'Completed 15 daily challenges!', icon: '🌟', earned: false },
+  { id: 'daily-30', name: 'Challenge Legend', description: 'Completed 30 daily challenges!', icon: '💎', earned: false },
 ];
 
 const INITIAL_STATE: GameState = {
@@ -66,6 +78,7 @@ const INITIAL_STATE: GameState = {
   badges: INITIAL_BADGES,
   streak: 0,
   dailyChallengeIndex: 0,
+  totalDailyChallenges: 0,
 };
 
 interface GameContextType {
@@ -201,9 +214,37 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       const isConsecutiveDay = prev.lastDailyChallengeDate === yesterdayStr;
       const newStreak = isConsecutiveDay ? prev.streak + 1 : 1;
+      const newTotalChallenges = (prev.totalDailyChallenges || 0) + 1;
       
       const newXp = prev.xp + xp;
       const newLevel = calculateLevel(newXp);
+      
+      // Check for streak badges
+      const updatedBadges = prev.badges.map(badge => {
+        if (badge.id === 'streak-3' && newStreak >= 3 && !badge.earned) {
+          return { ...badge, earned: true, earnedAt: new Date() };
+        }
+        if (badge.id === 'streak-7' && newStreak >= 7 && !badge.earned) {
+          return { ...badge, earned: true, earnedAt: new Date() };
+        }
+        if (badge.id === 'streak-14' && newStreak >= 14 && !badge.earned) {
+          return { ...badge, earned: true, earnedAt: new Date() };
+        }
+        if (badge.id === 'streak-30' && newStreak >= 30 && !badge.earned) {
+          return { ...badge, earned: true, earnedAt: new Date() };
+        }
+        // Daily challenge completion badges
+        if (badge.id === 'daily-5' && newTotalChallenges >= 5 && !badge.earned) {
+          return { ...badge, earned: true, earnedAt: new Date() };
+        }
+        if (badge.id === 'daily-15' && newTotalChallenges >= 15 && !badge.earned) {
+          return { ...badge, earned: true, earnedAt: new Date() };
+        }
+        if (badge.id === 'daily-30' && newTotalChallenges >= 30 && !badge.earned) {
+          return { ...badge, earned: true, earnedAt: new Date() };
+        }
+        return badge;
+      });
       
       return {
         ...prev,
@@ -212,7 +253,9 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         streak: newStreak,
         lastDailyChallengeDate: today,
         dailyChallengeIndex: prev.dailyChallengeIndex + 1,
+        totalDailyChallenges: newTotalChallenges,
         lastPlayedAt: new Date(),
+        badges: updatedBadges,
       };
     });
   };

@@ -4,9 +4,11 @@ import { useGame } from '@/contexts/GameContext';
 import InteractiveCodeEditor from './InteractiveCodeEditor';
 import useSoundEffects from '@/hooks/useSoundEffects';
 import Confetti from './Confetti';
-import { Flame, Gift, Clock, CheckCircle2, Sparkles } from 'lucide-react';
+import { Flame, Gift, CheckCircle2, Sparkles, Zap, Target } from 'lucide-react';
 
+// Difficulty levels: 1 = Easy, 2 = Medium, 3 = Hard
 const DAILY_CHALLENGES = [
+  // Easy - Variables (25 XP)
   {
     id: 1,
     title: 'Magic Number',
@@ -14,6 +16,8 @@ const DAILY_CHALLENGES = [
     initialCode: '# Create magic variable\nmagic = ___\nprint(magic)',
     hint: 'Replace ___ with the number 42',
     xpReward: 25,
+    difficulty: 1,
+    topic: 'Variables',
   },
   {
     id: 2,
@@ -22,6 +26,8 @@ const DAILY_CHALLENGES = [
     initialCode: '# Create your greeting\ngreeting = "___"\nprint(greeting)',
     hint: 'Replace ___ with Hello, World!',
     xpReward: 25,
+    difficulty: 1,
+    topic: 'Strings',
   },
   {
     id: 3,
@@ -30,6 +36,8 @@ const DAILY_CHALLENGES = [
     initialCode: '# Pick a number\nnumber = 5\ndouble = number * ___\nprint(double)',
     hint: 'Replace ___ with 2 to double the number',
     xpReward: 25,
+    difficulty: 1,
+    topic: 'Math',
   },
   {
     id: 4,
@@ -38,30 +46,178 @@ const DAILY_CHALLENGES = [
     initialCode: '# Your info\nname = "___"\nage = ___\nprint(name)\nprint(age)',
     hint: 'Fill in your name in quotes and age as a number',
     xpReward: 25,
+    difficulty: 1,
+    topic: 'Variables',
   },
+  
+  // Medium - Conditionals (35 XP)
   {
     id: 5,
-    title: 'Math Wizard',
-    description: 'Calculate 10 + 5 and store it in a variable called total!',
-    initialCode: '# Do the math\ntotal = ___ + ___\nprint(total)',
-    hint: 'Replace the first ___ with 10 and second with 5',
-    xpReward: 25,
+    title: 'Weather Check',
+    description: 'Use an if-else to print "Take umbrella!" if raining is True, else print "Enjoy the sun!"',
+    initialCode: '# Check the weather\nraining = True\n\nif raining == ___:\n    print("Take umbrella!")\nelse:\n    print("Enjoy the sun!")',
+    hint: 'Replace ___ with True to check if it\'s raining',
+    xpReward: 35,
+    difficulty: 2,
+    topic: 'Conditionals',
   },
   {
     id: 6,
-    title: 'Secret Code',
-    description: 'Create a secret_code variable with any number and print it!',
-    initialCode: '# Your secret\nsecret_code = ___\nprint(secret_code)',
-    hint: 'Replace ___ with any number you like',
-    xpReward: 25,
+    title: 'Age Gate',
+    description: 'Check if age is 18 or more. Print "Welcome!" if yes, else "Too young!"',
+    initialCode: '# Age check\nage = 20\n\nif age ___ 18:\n    print("Welcome!")\nelse:\n    print("Too young!")',
+    hint: 'Replace ___ with >= to check if age is 18 or more',
+    xpReward: 35,
+    difficulty: 2,
+    topic: 'Conditionals',
   },
   {
     id: 7,
-    title: 'Shopping List',
-    description: 'Create a variable for your favorite fruit and print it!',
-    initialCode: '# Your favorite\nfruit = "___"\nprint(fruit)',
+    title: 'Grade Calculator',
+    description: 'Use if-elif-else: 90+ is "A", 80+ is "B", else "Keep trying!"',
+    initialCode: '# Calculate grade\nscore = 85\n\nif score >= 90:\n    print("A")\nelif score >= ___:\n    print("B")\nelse:\n    print("Keep trying!")',
+    hint: 'Replace ___ with 80 to check for B grade',
+    xpReward: 35,
+    difficulty: 2,
+    topic: 'Conditionals',
+  },
+  {
+    id: 8,
+    title: 'Password Check',
+    description: 'Check if password equals "secret123". Print "Access granted!" or "Wrong password!"',
+    initialCode: '# Security check\npassword = "secret123"\n\nif password ___ "secret123":\n    print("Access granted!")\nelse:\n    print("Wrong password!")',
+    hint: 'Replace ___ with == to check equality',
+    xpReward: 35,
+    difficulty: 2,
+    topic: 'Conditionals',
+  },
+  
+  // Medium - Loops (40 XP)
+  {
+    id: 9,
+    title: 'Countdown',
+    description: 'Use a for loop with range to count from 5 down to 1, then print "Blast off!"',
+    initialCode: '# Countdown sequence\nfor i in range(5, 0, ___):\n    print(i)\nprint("Blast off!")',
+    hint: 'Replace ___ with -1 to count backwards',
+    xpReward: 40,
+    difficulty: 2,
+    topic: 'Loops',
+  },
+  {
+    id: 10,
+    title: 'Star Pattern',
+    description: 'Print 5 stars using a for loop!',
+    initialCode: '# Draw stars\nfor i in range(___):\n    print("⭐")',
+    hint: 'Replace ___ with 5 to print 5 stars',
+    xpReward: 40,
+    difficulty: 2,
+    topic: 'Loops',
+  },
+  {
+    id: 11,
+    title: 'Sum Calculator',
+    description: 'Use a loop to add numbers 1 to 5 and print the total!',
+    initialCode: '# Add numbers\ntotal = 0\nfor i in range(1, ___):\n    total = total + i\nprint(total)',
+    hint: 'Replace ___ with 6 (range stops before this number)',
+    xpReward: 40,
+    difficulty: 2,
+    topic: 'Loops',
+  },
+  
+  // Hard - Functions (50 XP)
+  {
+    id: 12,
+    title: 'Spell Creator',
+    description: 'Create a function called `cast_spell` that prints "✨ Magic!" when called.',
+    initialCode: '# Create your spell\ndef ___():\n    print("✨ Magic!")\n\n# Cast it!\ncast_spell()',
+    hint: 'Replace ___ with cast_spell to name the function',
+    xpReward: 50,
+    difficulty: 3,
+    topic: 'Functions',
+  },
+  {
+    id: 13,
+    title: 'Greeting Function',
+    description: 'Create a function that takes a name and prints "Hello, [name]!"',
+    initialCode: '# Greeting function\ndef greet(___):\n    print("Hello, " + name + "!")\n\ngreet("Hero")',
+    hint: 'Replace ___ with name as the parameter',
+    xpReward: 50,
+    difficulty: 3,
+    topic: 'Functions',
+  },
+  {
+    id: 14,
+    title: 'Double Function',
+    description: 'Create a function that returns a number multiplied by 2!',
+    initialCode: '# Double function\ndef double(num):\n    return num * ___\n\nresult = double(5)\nprint(result)',
+    hint: 'Replace ___ with 2 to double the number',
+    xpReward: 50,
+    difficulty: 3,
+    topic: 'Functions',
+  },
+  
+  // Hard - Debugging (50 XP)
+  {
+    id: 15,
+    title: 'Fix the Bug',
+    description: 'This code has a syntax error. Find and fix it!',
+    initialCode: '# Fix the error\nmessage = "Hello World\nprint(message)',
+    hint: 'The string is missing a closing quote!',
+    xpReward: 50,
+    difficulty: 3,
+    topic: 'Debugging',
+  },
+  {
+    id: 16,
+    title: 'Logic Fix',
+    description: 'Fix the loop so it prints 1, 2, 3 (not 0, 1, 2)!',
+    initialCode: '# Fix the range\nfor i in range(___, 4):\n    print(i)',
+    hint: 'Replace ___ with 1 to start from 1',
+    xpReward: 50,
+    difficulty: 3,
+    topic: 'Debugging',
+  },
+  
+  // Bonus challenges
+  {
+    id: 17,
+    title: 'Even Numbers',
+    description: 'Print only even numbers from 2 to 10 using a loop!',
+    initialCode: '# Even numbers only\nfor i in range(2, 11, ___):\n    print(i)',
+    hint: 'Replace ___ with 2 to step by 2',
+    xpReward: 45,
+    difficulty: 2,
+    topic: 'Loops',
+  },
+  {
+    id: 18,
+    title: 'Temperature Converter',
+    description: 'Convert 100 Celsius to Fahrenheit (F = C * 9/5 + 32)!',
+    initialCode: '# Temperature conversion\ncelsius = 100\nfahrenheit = celsius * 9/5 + ___\nprint(fahrenheit)',
+    hint: 'Replace ___ with 32 to complete the formula',
+    xpReward: 35,
+    difficulty: 2,
+    topic: 'Math',
+  },
+  {
+    id: 19,
+    title: 'Power Calculator',
+    description: 'Calculate 2 to the power of 8 using **!',
+    initialCode: '# Power up!\nbase = 2\npower = 8\nresult = base ___ power\nprint(result)',
+    hint: 'Replace ___ with ** for exponentiation',
+    xpReward: 35,
+    difficulty: 2,
+    topic: 'Math',
+  },
+  {
+    id: 20,
+    title: 'List Master',
+    description: 'Create a list of 3 fruits and print the first one!',
+    initialCode: '# Fruit list\nfruits = ["apple", "banana", "___"]\nprint(fruits[0])',
     hint: 'Replace ___ with any fruit name',
-    xpReward: 25,
+    xpReward: 30,
+    difficulty: 1,
+    topic: 'Lists',
   },
 ];
 
@@ -98,7 +254,7 @@ const DailyChallenge: React.FC = () => {
       
       {/* Header */}
       <div className="bg-gradient-to-r from-primary/20 to-accent/20 px-6 py-4 border-b border-border">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
               {isComplete ? (
@@ -108,8 +264,23 @@ const DailyChallenge: React.FC = () => {
               )}
             </div>
             <div>
-              <h3 className="font-bold text-foreground">Daily Challenge</h3>
-              <p className="text-sm text-muted-foreground">{challenge.title}</p>
+              <h3 className="font-bold text-foreground flex items-center gap-2">
+                Daily Challenge
+                <span className={`text-xs px-2 py-0.5 rounded-full ${
+                  challenge.difficulty === 1 ? 'bg-green-500/20 text-green-600' :
+                  challenge.difficulty === 2 ? 'bg-yellow-500/20 text-yellow-600' :
+                  'bg-red-500/20 text-red-600'
+                }`}>
+                  {challenge.difficulty === 1 ? 'Easy' : challenge.difficulty === 2 ? 'Medium' : 'Hard'}
+                </span>
+              </h3>
+              <p className="text-sm text-muted-foreground flex items-center gap-2">
+                {challenge.title}
+                <span className="text-xs bg-muted px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <Target className="w-3 h-3" />
+                  {challenge.topic}
+                </span>
+              </p>
             </div>
           </div>
           

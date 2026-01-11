@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Play, RotateCcw, Sparkles } from 'lucide-react';
+import { Play, RotateCcw, Sparkles, CheckCircle2, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface InteractiveCodeEditorProps {
@@ -9,6 +9,7 @@ interface InteractiveCodeEditorProps {
   expectedOutput?: string;
   onSuccess?: () => void;
   hint?: string;
+  showSubmitOnSuccess?: boolean;
 }
 
 const InteractiveCodeEditor: React.FC<InteractiveCodeEditorProps> = ({
@@ -16,6 +17,7 @@ const InteractiveCodeEditor: React.FC<InteractiveCodeEditorProps> = ({
   expectedOutput,
   onSuccess,
   hint,
+  showSubmitOnSuccess = true,
 }) => {
   const [code, setCode] = useState(initialCode);
   const [output, setOutput] = useState<string>('');
@@ -129,9 +131,21 @@ const InteractiveCodeEditor: React.FC<InteractiveCodeEditorProps> = ({
           </div>
           <pre className="font-mono text-sm text-foreground whitespace-pre-wrap">{output}</pre>
           {isSuccess && (
-            <p className="mt-2 text-primary font-medium">
-              🎉 Wonderful! Your spell worked perfectly!
-            </p>
+            <div className="mt-3 flex items-center justify-between flex-wrap gap-3">
+              <p className="text-primary font-medium flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5" />
+                Wonderful! Your spell worked perfectly!
+              </p>
+              {showSubmitOnSuccess && (
+                <Button
+                  size="sm"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Submit Solution
+                </Button>
+              )}
+            </div>
           )}
         </div>
       )}
