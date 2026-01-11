@@ -6,7 +6,7 @@ import PlayerStats from '@/components/PlayerStats';
 import DailyChallenge from '@/components/DailyChallenge';
 import { useGame } from '@/contexts/GameContext';
 import { worlds } from '@/data/worlds';
-import { ArrowLeft, Map, Flame, Trophy, Crown } from 'lucide-react';
+import { ArrowLeft, Map, Flame, Trophy, Crown, User } from 'lucide-react';
 
 const Worlds: React.FC = () => {
   const { state } = useGame();
@@ -73,6 +73,20 @@ const Worlds: React.FC = () => {
                 <p className="text-xs text-muted-foreground mt-3 text-center">
                   Click to view all badges →
                 </p>
+              </Link>
+              
+              {/* Profile Link */}
+              <Link to="/profile" className="block mt-4 bg-card rounded-xl p-4 border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-md">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-xl">
+                    {state.playerAvatar || '🧙'}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-foreground">My Profile</h3>
+                    <p className="text-xs text-muted-foreground">Customize your avatar</p>
+                  </div>
+                  <User className="w-5 h-5 text-muted-foreground" />
+                </div>
               </Link>
               
               {/* Leaderboard Link */}

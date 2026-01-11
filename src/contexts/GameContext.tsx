@@ -19,6 +19,7 @@ export interface LessonProgress {
 
 export interface GameState {
   playerName: string;
+  playerAvatar: string;
   xp: number;
   level: number;
   currentWorld: number;
@@ -71,6 +72,7 @@ const INITIAL_BADGES: Badge[] = [
 
 const INITIAL_STATE: GameState = {
   playerName: '',
+  playerAvatar: '🧙',
   xp: 0,
   level: 0,
   currentWorld: 1,
@@ -84,6 +86,7 @@ const INITIAL_STATE: GameState = {
 interface GameContextType {
   state: GameState;
   setPlayerName: (name: string) => void;
+  setPlayerAvatar: (avatar: string) => void;
   addXp: (amount: number) => void;
   completeLesson: (lessonId: string, worldId: string, xp: number) => void;
   earnBadge: (badgeId: string) => void;
@@ -121,6 +124,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const setPlayerName = (name: string) => {
     setState(prev => ({ ...prev, playerName: name }));
+  };
+
+  const setPlayerAvatar = (avatar: string) => {
+    setState(prev => ({ ...prev, playerAvatar: avatar }));
   };
 
   const addXp = (amount: number) => {
@@ -265,6 +272,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       value={{
         state,
         setPlayerName,
+        setPlayerAvatar,
         addXp,
         completeLesson,
         earnBadge,
