@@ -1,36 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import WorldCard from '@/components/WorldCard';
 import PlayerStats from '@/components/PlayerStats';
 import DailyChallenge from '@/components/DailyChallenge';
+import GlobalNavbar from '@/components/GlobalNavbar';
 import { useGame } from '@/contexts/GameContext';
 import { worlds } from '@/data/worlds';
-import { ArrowLeft, Map, Flame, Trophy, Crown, User } from 'lucide-react';
+import { Trophy, Crown, User } from 'lucide-react';
 
 const Worlds: React.FC = () => {
   const { state } = useGame();
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Home
-            </Button>
-          </Link>
-          <div className="flex items-center gap-2">
-            <Map className="w-5 h-5 text-primary" />
-            <h1 className="font-bold text-foreground">World Map</h1>
-          </div>
-          <div className="text-sm text-muted-foreground">
-            {state.playerName && `Hi, ${state.playerName}!`}
-          </div>
-        </div>
-      </header>
+      <GlobalNavbar />
 
       <main className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">

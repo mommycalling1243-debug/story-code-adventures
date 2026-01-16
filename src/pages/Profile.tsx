@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useGame } from '@/contexts/GameContext';
+import GlobalNavbar from '@/components/GlobalNavbar';
 import { worlds } from '@/data/worlds';
-import { ArrowLeft, Edit2, Check, Trophy, Flame, Target, Star, BookOpen, Zap } from 'lucide-react';
+import { Edit2, Check, Trophy, Flame, Target, Star, BookOpen, Zap } from 'lucide-react';
 
 const AVATAR_OPTIONS = [
   '🧙', '🧙‍♀️', '🦸', '🦸‍♀️', '🧝', '🧝‍♀️', '🧚', '🧚‍♀️', 
@@ -53,19 +54,7 @@ const Profile: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/worlds">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              World Map
-            </Button>
-          </Link>
-          <h1 className="font-bold text-foreground">My Profile</h1>
-          <div className="w-20" />
-        </div>
-      </header>
+      <GlobalNavbar />
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Profile Card */}
