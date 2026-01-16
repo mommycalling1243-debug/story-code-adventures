@@ -3,20 +3,40 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useGame } from '@/contexts/GameContext';
+import TutorialWalkthrough from '@/components/TutorialWalkthrough';
 import heroImage from '@/assets/hero-village.jpg';
 import owlMascot from '@/assets/owl-mascot.png';
-import { Sparkles, Star, BookOpen, Trophy, ChevronRight, Gamepad2 } from 'lucide-react';
+import { Sparkles, Star, BookOpen, Trophy, ChevronRight, Gamepad2, HelpCircle } from 'lucide-react';
 
 const Index: React.FC = () => {
-  const { state, setPlayerName } = useGame();
+  const { state, setPlayerName, completeTutorial } = useGame();
   const [nameInput, setNameInput] = useState('');
   const [showNameInput, setShowNameInput] = useState(!state.playerName);
+  const [showTutorial, setShowTutorial] = useState(false);
 
   const handleStartAdventure = () => {
     if (nameInput.trim()) {
       setPlayerName(nameInput.trim());
       setShowNameInput(false);
+      // Show tutorial for first-time users
+      if (!state.hasSeenTutorial) {
+        setShowTutorial(true);
+      }
     }
+  };
+
+  const handleTutorialComplete = () => {
+    completeTutorial();
+    setShowTutorial(false);
+  };
+
+  const handleTutorialSkip = () => {
+    completeTutorial();
+    setShowTutorial(false);
+  };
+
+  const handleShowTutorial = () => {
+    setShowTutorial(true);
   };
 
   const features = [
@@ -28,6 +48,14 @@ const Index: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Tutorial Walkthrough */}
+      {showTutorial && (
+        <TutorialWalkthrough 
+          onComplete={handleTutorialComplete} 
+          onSkip={handleTutorialSkip} 
+        />
+      )}
+
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         {/* Background Image */}
@@ -88,15 +116,26 @@ const Index: React.FC = () => {
                 Welcome back, <strong className="text-primary">{state.playerName}</strong>! 
                 <span className="ml-2">🌟</span>
               </p>
-              <Link to="/worlds">
-                <Button 
+              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                <Link to="/worlds">
+                  <Button 
+                    size="lg"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 rounded-xl shadow-lg"
+                  >
+                    Continue Adventure
+                    <ChevronRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </Link>
+                <Button
+                  variant="outline"
                   size="lg"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 rounded-xl shadow-lg"
+                  onClick={handleShowTutorial}
+                  className="text-lg px-6 py-6 rounded-xl"
                 >
-                  Continue Adventure
-                  <ChevronRight className="w-5 h-5 ml-2" />
+                  <HelpCircle className="w-5 h-5 mr-2" />
+                  View Tutorial
                 </Button>
-              </Link>
+              </div>
             </div>
           )}
         </div>

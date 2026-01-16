@@ -30,6 +30,7 @@ export interface GameState {
   lastDailyChallengeDate?: string;
   dailyChallengeIndex: number;
   totalDailyChallenges: number;
+  hasSeenTutorial: boolean;
 }
 
 const LEVELS = [
@@ -81,6 +82,7 @@ const INITIAL_STATE: GameState = {
   streak: 0,
   dailyChallengeIndex: 0,
   totalDailyChallenges: 0,
+  hasSeenTutorial: false,
 };
 
 interface GameContextType {
@@ -98,6 +100,7 @@ interface GameContextType {
   isWorldUnlocked: (worldId: number) => boolean;
   completeDailyChallenge: (xp: number) => void;
   getDailyChallengeStatus: () => { isCompleted: boolean; todayChallenge: number };
+  completeTutorial: () => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -267,6 +270,10 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
   };
 
+  const completeTutorial = () => {
+    setState(prev => ({ ...prev, hasSeenTutorial: true }));
+  };
+
   return (
     <GameContext.Provider
       value={{
@@ -284,6 +291,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         isWorldUnlocked,
         completeDailyChallenge,
         getDailyChallengeStatus,
+        completeTutorial,
       }}
     >
       {children}
