@@ -8,6 +8,7 @@ import StoryPanel from '@/components/StoryPanel';
 import InteractiveCodeEditor from '@/components/InteractiveCodeEditor';
 import XpPopup from '@/components/XpPopup';
 import CelebrationOverlay from '@/components/CelebrationOverlay';
+import GlobalNavbar from '@/components/GlobalNavbar';
 import useSoundEffects from '@/hooks/useSoundEffects';
 import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
 
@@ -862,8 +863,10 @@ const Lesson: React.FC = () => {
         />
       )}
 
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
+      <GlobalNavbar />
+
+      {/* Lesson Header */}
+      <div className="bg-card border-b border-border">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to={`/world/${world.slug}`}>
@@ -893,7 +896,7 @@ const Lesson: React.FC = () => {
             ))}
           </div>
         </div>
-      </header>
+      </div>
 
       <main className="container mx-auto px-4 py-8 max-w-3xl">
         {/* Story Step */}

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { useGame } from '@/contexts/GameContext';
-import { ArrowLeft, Trophy, Crown, Medal, Star, Flame, Award } from 'lucide-react';
+import GlobalNavbar from '@/components/GlobalNavbar';
+import { Trophy, Crown, Medal, Star, Flame, Award } from 'lucide-react';
 
 // Sample leaderboard data (in a real app, this would come from a backend)
 const SAMPLE_PLAYERS = [
@@ -68,24 +67,7 @@ const Leaderboard: React.FC = () => {
   
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/worlds">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                World Map
-              </Button>
-            </Link>
-            <div className="flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-primary" />
-              <span className="font-bold text-foreground">Leaderboard</span>
-            </div>
-            <div className="w-24" />
-          </div>
-        </div>
-      </header>
+      <GlobalNavbar />
 
       <main className="container mx-auto px-4 py-8 max-w-3xl">
         {/* Player's current rank */}

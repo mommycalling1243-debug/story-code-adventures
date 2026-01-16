@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useGame } from '@/contexts/GameContext';
+import GlobalNavbar from '@/components/GlobalNavbar';
 import useSoundEffects from '@/hooks/useSoundEffects';
-import { ArrowLeft, Lock, Trophy, Sparkles, Flame, Target } from 'lucide-react';
+import { Lock, Trophy, Sparkles, Flame, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Badges: React.FC = () => {
@@ -37,21 +38,7 @@ const Badges: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-card border-b border-border sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/worlds" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-              <ArrowLeft className="w-5 h-5" />
-              <span>Back to Worlds</span>
-            </Link>
-            <div className="flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-primary" />
-              <span className="font-bold text-foreground">{earnedCount}/{totalCount}</span>
-            </div>
-          </div>
-        </div>
-      </header>
+      <GlobalNavbar />
 
       <main className="container mx-auto px-4 py-8">
         {/* Title Section */}
