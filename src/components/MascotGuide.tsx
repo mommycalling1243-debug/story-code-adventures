@@ -24,6 +24,8 @@ interface MascotGuideProps {
   hints?: string[];
   encouragements?: string[];
   enableSounds?: boolean;
+  enableTyping?: boolean;
+  typingSpeed?: number;
 }
 
 const defaultMessages: MascotMessage[] = [
@@ -53,6 +55,38 @@ const defaultEncouragements: string[] = [
   "You're braver than you believe and smarter than you think! 💫",
 ];
 
+// Typing animation hook
+const useTypingAnimation = (text: string, enabled: boolean, speed: number = 30) => {
+  const [displayedText, setDisplayedText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+
+  useEffect(() => {
+    if (!enabled) {
+      setDisplayedText(text);
+      setIsTyping(false);
+      return;
+    }
+
+    setDisplayedText('');
+    setIsTyping(true);
+    let currentIndex = 0;
+
+    const interval = setInterval(() => {
+      if (currentIndex < text.length) {
+        setDisplayedText(text.slice(0, currentIndex + 1));
+        currentIndex++;
+      } else {
+        setIsTyping(false);
+        clearInterval(interval);
+      }
+    }, speed);
+
+    return () => clearInterval(interval);
+  }, [text, enabled, speed]);
+
+  return { displayedText, isTyping };
+};
+
 const MascotGuide: React.FC<MascotGuideProps> = ({
   message,
   mood = 'idle',
@@ -65,6 +99,8 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
   hints = defaultHints,
   encouragements = defaultEncouragements,
   enableSounds = true,
+  enableTyping = true,
+  typingSpeed = 25,
 }) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
@@ -80,6 +116,12 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
     playMascotCelebrateSound,
     playMascotHintSound,
   } = useSoundEffects();
+
+  const currentMessage = extraMessage || message || messages[currentMessageIndex]?.text || '';
+  const currentMood = extraMessage ? extraMood : (message ? mood : messages[currentMessageIndex]?.mood || mood);
+
+  // Typing animation
+  const { displayedText, isTyping } = useTypingAnimation(currentMessage, enableTyping, typingSpeed);
 
   // Play sound based on mood
   const playMoodSound = useCallback((newMood: MascotMood) => {
@@ -127,12 +169,8 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
 
   // Play sound when mood changes
   useEffect(() => {
-    const currentMood = extraMessage ? extraMood : (message ? mood : messages[currentMessageIndex]?.mood || mood);
     playMoodSound(currentMood);
-  }, [mood, extraMood, extraMessage]);
-
-  const currentMessage = extraMessage || message || messages[currentMessageIndex]?.text;
-  const currentMood = extraMessage ? extraMood : (message ? mood : messages[currentMessageIndex]?.mood || mood);
+  }, [currentMood, playMoodSound]);
 
   const sizeClasses = {
     sm: 'w-16 h-16',
@@ -191,7 +229,6 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
     setExtraMood('thinking');
     setShowInteractionMenu(false);
     
-    // Clear extra message after 8 seconds
     setTimeout(() => {
       setExtraMessage(null);
     }, 8000);
@@ -204,7 +241,6 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
     setExtraMood('encouraging');
     setShowInteractionMenu(false);
     
-    // Clear extra message after 6 seconds
     setTimeout(() => {
       setExtraMessage(null);
     }, 6000);
@@ -302,7 +338,7 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
         )}
       </div>
 
-      {/* Speech Bubble */}
+      {/* Speech Bubble with Typing Animation */}
       {showSpeechBubble && currentMessage && (
         <div
           className={cn(
@@ -321,9 +357,12 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
           
           <div className="flex items-start gap-2">
             <p className="text-foreground font-medium leading-relaxed flex-1">
-              {currentMessage}
+              {displayedText}
+              {isTyping && (
+                <span className="inline-block w-1 h-4 bg-primary ml-0.5 animate-pulse" />
+              )}
             </p>
-            {extraMessage && (
+            {extraMessage && !isTyping && (
               <button
                 onClick={handleDismissExtra}
                 className="text-muted-foreground hover:text-foreground transition-colors"
@@ -334,7 +373,7 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
             )}
           </div>
 
-          {extraMessage && (
+          {extraMessage && !isTyping && (
             <p className="text-xs text-muted-foreground mt-2">
               Click me again for more! 🦉
             </p>
