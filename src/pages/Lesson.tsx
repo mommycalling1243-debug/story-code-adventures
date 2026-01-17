@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useGame } from '@/contexts/GameContext';
@@ -9,6 +9,7 @@ import InteractiveCodeEditor from '@/components/InteractiveCodeEditor';
 import XpPopup from '@/components/XpPopup';
 import CelebrationOverlay from '@/components/CelebrationOverlay';
 import GlobalNavbar from '@/components/GlobalNavbar';
+import MascotGuide from '@/components/MascotGuide';
 import useSoundEffects from '@/hooks/useSoundEffects';
 import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
 
@@ -703,6 +704,7 @@ const Lesson: React.FC = () => {
   const [questCompleted, setQuestCompleted] = useState(false);
   const [showBadge, setShowBadge] = useState<{ name: string; icon: string } | null>(null);
   const [showWorldUnlock, setShowWorldUnlock] = useState<string | null>(null);
+  const [codeRan, setCodeRan] = useState(false);
 
   // Find the lesson and world
   let world = null;
@@ -734,6 +736,49 @@ const Lesson: React.FC = () => {
 
   const content = lessonContent[lessonId || ''];
   const alreadyCompleted = isLessonCompleted(lesson.id);
+
+  // Get mascot message based on current state
+  const mascotState = useMemo(() => {
+    if (questCompleted || alreadyCompleted) {
+      return { 
+        message: "Fantastic work! You've mastered this lesson! 🎉", 
+        mood: 'celebrating' as const 
+      };
+    }
+    if (codeRan && step === 3) {
+      return { 
+        message: "Great try! Keep experimenting until the magic works! ✨", 
+        mood: 'encouraging' as const 
+      };
+    }
+    switch (step) {
+      case 0:
+        return { 
+          message: "Welcome! Let me tell you a story about coding magic... 📖", 
+          mood: 'excited' as const 
+        };
+      case 1:
+        return { 
+          message: "Here's the secret knowledge! Pay attention to the bold parts! 🧠", 
+          mood: 'thinking' as const 
+        };
+      case 2:
+        return { 
+          message: "See how the code works? Try to understand each line! 💡", 
+          mood: 'idle' as const 
+        };
+      case 3:
+        return { 
+          message: "Time to practice! Click 'Cast Spell' when you're ready! 🪄", 
+          mood: 'encouraging' as const 
+        };
+      default:
+        return { 
+          message: "You're doing great! Keep going! 🦉", 
+          mood: 'idle' as const 
+        };
+    }
+  }, [step, questCompleted, alreadyCompleted, codeRan]);
 
   const handleQuestSuccess = () => {
     // Mark quest as solved (but don't award XP yet - that happens on submit)
@@ -899,6 +944,15 @@ const Lesson: React.FC = () => {
       </div>
 
       <main className="container mx-auto px-4 py-8 max-w-3xl">
+        {/* Animated Mascot Guide */}
+        <div className="mb-6">
+          <MascotGuide
+            message={mascotState.message}
+            mood={mascotState.mood}
+            size="md"
+          />
+        </div>
+
         {/* Story Step */}
         {step === 0 && (
           <div className="space-y-6">
@@ -946,6 +1000,7 @@ const Lesson: React.FC = () => {
               expectedOutput={content.expectedOutput}
               onSuccess={handleQuestSuccess}
               onSubmit={handleSubmit}
+              onCodeRun={() => setCodeRan(true)}
               hint={content.hint}
               showSubmitOnSuccess={!alreadyCompleted}
             />

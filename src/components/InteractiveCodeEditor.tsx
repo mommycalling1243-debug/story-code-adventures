@@ -9,6 +9,7 @@ interface InteractiveCodeEditorProps {
   expectedOutput?: string;
   onSuccess?: () => void;
   onSubmit?: () => void;
+  onCodeRun?: () => void;
   hint?: string;
   showSubmitOnSuccess?: boolean;
 }
@@ -18,6 +19,7 @@ const InteractiveCodeEditor: React.FC<InteractiveCodeEditorProps> = ({
   expectedOutput,
   onSuccess,
   onSubmit,
+  onCodeRun,
   hint,
   showSubmitOnSuccess = true,
 }) => {
@@ -36,6 +38,7 @@ const InteractiveCodeEditor: React.FC<InteractiveCodeEditorProps> = ({
 
   // Simple Python interpreter simulation
   const runCode = () => {
+    onCodeRun?.();
     try {
       let result = '';
       const lines = code.split('\n');
