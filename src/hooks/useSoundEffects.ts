@@ -82,6 +82,43 @@ const useSoundEffects = () => {
     setTimeout(() => playTone(880, 0.15, 'sawtooth', 0.15), 180);
   }, [playTone]);
 
+  const playMascotSpeakSound = useCallback(() => {
+    // Friendly owl hoot - soft melodic sound
+    playTone(440, 0.12, 'sine', 0.15);
+    setTimeout(() => playTone(523, 0.15, 'sine', 0.18), 100);
+    setTimeout(() => playTone(392, 0.2, 'sine', 0.12), 200);
+  }, [playTone]);
+
+  const playMascotExcitedSound = useCallback(() => {
+    // Excited chirpy sound
+    playTone(659, 0.08, 'sine', 0.12);
+    setTimeout(() => playTone(784, 0.08, 'sine', 0.15), 70);
+    setTimeout(() => playTone(880, 0.1, 'sine', 0.18), 140);
+    setTimeout(() => playTone(1047, 0.15, 'sine', 0.15), 220);
+  }, [playTone]);
+
+  const playMascotThinkingSound = useCallback(() => {
+    // Contemplative humming sound
+    playTone(330, 0.2, 'sine', 0.1);
+    setTimeout(() => playTone(350, 0.25, 'sine', 0.12), 180);
+  }, [playTone]);
+
+  const playMascotCelebrateSound = useCallback(() => {
+    // Celebration fanfare
+    playTone(523, 0.1, 'sine', 0.15);
+    setTimeout(() => playTone(659, 0.1, 'sine', 0.15), 80);
+    setTimeout(() => playTone(784, 0.1, 'sine', 0.18), 160);
+    setTimeout(() => playTone(1047, 0.2, 'sine', 0.2), 240);
+    setTimeout(() => playTone(1319, 0.25, 'sine', 0.15), 340);
+  }, [playTone]);
+
+  const playMascotHintSound = useCallback(() => {
+    // Helpful chime - like a light bulb moment
+    playTone(698, 0.1, 'sine', 0.12);
+    setTimeout(() => playTone(880, 0.12, 'sine', 0.15), 100);
+    setTimeout(() => playTone(1047, 0.18, 'sine', 0.18), 200);
+  }, [playTone]);
+
   return {
     playXpSound,
     playLessonCompleteSound,
@@ -90,6 +127,11 @@ const useSoundEffects = () => {
     playClickSound,
     playSuccessSound,
     playStreakSound,
+    playMascotSpeakSound,
+    playMascotExcitedSound,
+    playMascotThinkingSound,
+    playMascotCelebrateSound,
+    playMascotHintSound,
   };
 };
 

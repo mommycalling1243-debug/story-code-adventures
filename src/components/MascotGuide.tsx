@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
+import { MessageCircle, Lightbulb, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import owlMascot from '@/assets/owl-mascot.png';
+import useSoundEffects from '@/hooks/useSoundEffects';
 
 type MascotMood = 'idle' | 'thinking' | 'excited' | 'encouraging' | 'celebrating';
 
@@ -18,7 +21,9 @@ interface MascotGuideProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg';
   showSpeechBubble?: boolean;
-  onClick?: () => void;
+  hints?: string[];
+  encouragements?: string[];
+  enableSounds?: boolean;
 }
 
 const defaultMessages: MascotMessage[] = [
@@ -27,6 +32,25 @@ const defaultMessages: MascotMessage[] = [
   { text: "Don't be afraid to experiment!", mood: 'idle' },
   { text: "Every great wizard started as a beginner!", mood: 'encouraging' },
   { text: "Need help? Check the hint below! 💡", mood: 'thinking' },
+];
+
+const defaultHints: string[] = [
+  "Try reading the code example again - the pattern is there! 🔍",
+  "Remember: Python is case-sensitive. Check your spelling! ✨",
+  "Don't forget the colon (:) at the end of if/for/while statements!",
+  "Indentation matters in Python - use 4 spaces or a tab! 📐",
+  "Strings need quotes around them, numbers don't! 💬",
+  "Check the hint button below the code editor for specific help! 💡",
+];
+
+const defaultEncouragements: string[] = [
+  "You're doing amazing! Keep it up! 🌟",
+  "Every line of code brings you closer to mastery! 💪",
+  "Mistakes are just learning opportunities in disguise! 🎭",
+  "I believe in you! You've got this! 🦉✨",
+  "Great coders aren't born, they're made through practice! 🔥",
+  "Take your time - there's no rush in learning! 🌈",
+  "You're braver than you believe and smarter than you think! 💫",
 ];
 
 const MascotGuide: React.FC<MascotGuideProps> = ({
@@ -38,15 +62,50 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
   className,
   size = 'md',
   showSpeechBubble = true,
-  onClick,
+  hints = defaultHints,
+  encouragements = defaultEncouragements,
+  enableSounds = true,
 }) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [isBouncing, setIsBouncing] = useState(false);
+  const [showInteractionMenu, setShowInteractionMenu] = useState(false);
+  const [extraMessage, setExtraMessage] = useState<string | null>(null);
+  const [extraMood, setExtraMood] = useState<MascotMood>('idle');
+  
+  const {
+    playMascotSpeakSound,
+    playMascotExcitedSound,
+    playMascotThinkingSound,
+    playMascotCelebrateSound,
+    playMascotHintSound,
+  } = useSoundEffects();
+
+  // Play sound based on mood
+  const playMoodSound = useCallback((newMood: MascotMood) => {
+    if (!enableSounds) return;
+    
+    switch (newMood) {
+      case 'excited':
+        playMascotExcitedSound();
+        break;
+      case 'thinking':
+        playMascotThinkingSound();
+        break;
+      case 'celebrating':
+        playMascotCelebrateSound();
+        break;
+      case 'encouraging':
+        playMascotSpeakSound();
+        break;
+      default:
+        break;
+    }
+  }, [enableSounds, playMascotExcitedSound, playMascotThinkingSound, playMascotCelebrateSound, playMascotSpeakSound]);
 
   // Auto-rotate messages
   useEffect(() => {
-    if (!autoRotate || message) return;
+    if (!autoRotate || message || extraMessage) return;
 
     const interval = setInterval(() => {
       setIsVisible(false);
@@ -57,17 +116,23 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
     }, rotateInterval);
 
     return () => clearInterval(interval);
-  }, [autoRotate, message, messages.length, rotateInterval]);
+  }, [autoRotate, message, extraMessage, messages.length, rotateInterval]);
 
   // Bounce animation on message change
   useEffect(() => {
     setIsBouncing(true);
     const timeout = setTimeout(() => setIsBouncing(false), 500);
     return () => clearTimeout(timeout);
-  }, [currentMessageIndex, message]);
+  }, [currentMessageIndex, message, extraMessage]);
 
-  const currentMessage = message || messages[currentMessageIndex]?.text;
-  const currentMood = message ? mood : messages[currentMessageIndex]?.mood || mood;
+  // Play sound when mood changes
+  useEffect(() => {
+    const currentMood = extraMessage ? extraMood : (message ? mood : messages[currentMessageIndex]?.mood || mood);
+    playMoodSound(currentMood);
+  }, [mood, extraMood, extraMessage]);
+
+  const currentMessage = extraMessage || message || messages[currentMessageIndex]?.text;
+  const currentMood = extraMessage ? extraMood : (message ? mood : messages[currentMessageIndex]?.mood || mood);
 
   const sizeClasses = {
     sm: 'w-16 h-16',
@@ -76,9 +141,9 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
   };
 
   const bubbleSizeClasses = {
-    sm: 'max-w-[150px] text-xs',
-    md: 'max-w-[200px] text-sm',
-    lg: 'max-w-[250px] text-base',
+    sm: 'max-w-[180px] text-xs',
+    md: 'max-w-[220px] text-sm',
+    lg: 'max-w-[280px] text-base',
   };
 
   const getMoodAnimation = () => {
@@ -88,7 +153,7 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
       case 'thinking':
         return 'animate-pulse';
       case 'celebrating':
-        return 'animate-spin';
+        return '';
       case 'encouraging':
         return isBouncing ? 'animate-bounce' : '';
       default:
@@ -111,23 +176,63 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
     }
   };
 
+  const handleMascotClick = () => {
+    if (enableSounds) playMascotSpeakSound();
+    setShowInteractionMenu(!showInteractionMenu);
+    if (extraMessage) {
+      setExtraMessage(null);
+    }
+  };
+
+  const handleAskHint = () => {
+    if (enableSounds) playMascotHintSound();
+    const randomHint = hints[Math.floor(Math.random() * hints.length)];
+    setExtraMessage(randomHint);
+    setExtraMood('thinking');
+    setShowInteractionMenu(false);
+    
+    // Clear extra message after 8 seconds
+    setTimeout(() => {
+      setExtraMessage(null);
+    }, 8000);
+  };
+
+  const handleAskEncouragement = () => {
+    if (enableSounds) playMascotExcitedSound();
+    const randomEncouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
+    setExtraMessage(randomEncouragement);
+    setExtraMood('encouraging');
+    setShowInteractionMenu(false);
+    
+    // Clear extra message after 6 seconds
+    setTimeout(() => {
+      setExtraMessage(null);
+    }, 6000);
+  };
+
+  const handleDismissExtra = () => {
+    setExtraMessage(null);
+  };
+
   return (
     <div 
       className={cn(
-        "flex items-end gap-3 cursor-pointer transition-all duration-300",
-        onClick && "hover:scale-105",
+        "flex items-end gap-3 relative",
         className
       )}
-      onClick={onClick}
     >
       {/* Mascot Image */}
       <div className="relative">
         <div
           className={cn(
-            "relative transition-transform duration-300",
+            "relative transition-transform duration-300 cursor-pointer",
             getMoodAnimation(),
-            sizeClasses[size]
+            sizeClasses[size],
+            "hover:scale-110"
           )}
+          onClick={handleMascotClick}
+          role="button"
+          aria-label="Click Sage the Owl for hints or encouragement"
         >
           <img
             src={owlMascot}
@@ -144,6 +249,11 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
               {getMoodEmoji()}
             </span>
           )}
+
+          {/* Click indicator */}
+          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-primary rounded-full flex items-center justify-center shadow-md animate-pulse">
+            <MessageCircle className="w-3 h-3 text-primary-foreground" />
+          </div>
         </div>
 
         {/* Floating particles for celebration */}
@@ -165,6 +275,31 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
             ))}
           </div>
         )}
+
+        {/* Interaction Menu */}
+        {showInteractionMenu && (
+          <div className="absolute bottom-full left-0 mb-2 bg-card border border-border rounded-lg shadow-lg p-2 z-20 animate-fade-in">
+            <p className="text-xs text-muted-foreground mb-2 px-2">Ask Sage:</p>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-sm gap-2 hover:bg-accent"
+              onClick={handleAskHint}
+            >
+              <Lightbulb className="w-4 h-4 text-chart-2" />
+              Give me a hint
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-sm gap-2 hover:bg-accent"
+              onClick={handleAskEncouragement}
+            >
+              <span className="text-base">💪</span>
+              Encourage me
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Speech Bubble */}
@@ -174,16 +309,45 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
             "relative bg-card border border-border rounded-xl p-3 shadow-lg",
             "transition-all duration-300",
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
-            bubbleSizeClasses[size]
+            bubbleSizeClasses[size],
+            extraMessage && "border-primary/50 bg-primary/5"
           )}
         >
           {/* Speech bubble pointer */}
-          <div className="absolute left-0 bottom-4 w-3 h-3 bg-card border-l border-b border-border transform -translate-x-1/2 rotate-45" />
+          <div className={cn(
+            "absolute left-0 bottom-4 w-3 h-3 bg-card border-l border-b border-border transform -translate-x-1/2 rotate-45",
+            extraMessage && "border-primary/50 bg-primary/5"
+          )} />
           
-          <p className="text-foreground font-medium leading-relaxed">
-            {currentMessage}
-          </p>
+          <div className="flex items-start gap-2">
+            <p className="text-foreground font-medium leading-relaxed flex-1">
+              {currentMessage}
+            </p>
+            {extraMessage && (
+              <button
+                onClick={handleDismissExtra}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Dismiss message"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          {extraMessage && (
+            <p className="text-xs text-muted-foreground mt-2">
+              Click me again for more! 🦉
+            </p>
+          )}
         </div>
+      )}
+
+      {/* Click outside to close menu */}
+      {showInteractionMenu && (
+        <div 
+          className="fixed inset-0 z-10" 
+          onClick={() => setShowInteractionMenu(false)}
+        />
       )}
     </div>
   );
