@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
-import { MessageCircle, Lightbulb, X, AlertTriangle } from 'lucide-react';
+import { MessageCircle, Lightbulb, X, AlertTriangle, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import owlMascot from '@/assets/owl-mascot.png';
 import owlExcited from '@/assets/owl-excited.png';
@@ -8,9 +8,13 @@ import owlThinking from '@/assets/owl-thinking.png';
 import owlCelebrating from '@/assets/owl-celebrating.png';
 import owlError from '@/assets/owl-error.png';
 import owlEncouraging from '@/assets/owl-encouraging.png';
+import owlConfused from '@/assets/owl-confused.png';
+import owlSleeping from '@/assets/owl-sleeping.png';
+import owlProud from '@/assets/owl-proud.png';
 import useSoundEffects from '@/hooks/useSoundEffects';
+import { useMascotVoice } from '@/hooks/useMascotVoice';
 
-export type MascotMood = 'idle' | 'thinking' | 'excited' | 'encouraging' | 'celebrating' | 'error';
+export type MascotMood = 'idle' | 'thinking' | 'excited' | 'encouraging' | 'celebrating' | 'error' | 'confused' | 'sleeping' | 'proud';
 
 export interface CodeError {
   type: 'syntax' | 'runtime' | 'logic' | 'unknown';
@@ -39,34 +43,35 @@ interface MascotGuideProps {
   typingSpeed?: number;
   codeError?: CodeError | null;
   onDismissError?: () => void;
+  enableVoice?: boolean;
 }
 
 const defaultMessages: MascotMessage[] = [
-  { text: "Welcome, young coder! I'm Sage, your guide! 🦉", mood: 'excited' },
-  { text: "Click 'Cast Spell' to run your code!", mood: 'encouraging' },
+  { text: "Welcome, young coder! I'm Sage, your guide!", mood: 'excited' },
+  { text: "Click Cast Spell to run your code!", mood: 'encouraging' },
   { text: "Don't be afraid to experiment!", mood: 'idle' },
   { text: "Every great wizard started as a beginner!", mood: 'encouraging' },
-  { text: "Need help? Check the hint below! 💡", mood: 'thinking' },
+  { text: "Need help? Check the hint below!", mood: 'thinking' },
 ];
 
 const defaultHints: string[] = [
-  "Try reading the code example again - the pattern is there! 🔍",
-  "Remember: Python is case-sensitive. Check your spelling! ✨",
-  "Don't forget the colon (:) at the end of if/for/while statements!",
-  "Indentation matters in Python - use 4 spaces or a tab! 📐",
-  "Strings need quotes around them, numbers don't! 💬",
+  "Try reading the code example again - the pattern is there!",
+  "Remember: Python is case-sensitive. Check your spelling!",
+  "Don't forget the colon at the end of if, for, while statements!",
+  "Indentation matters in Python - use 4 spaces or a tab!",
+  "Strings need quotes around them, numbers don't!",
 ];
 
 const defaultEncouragements: string[] = [
-  "You're doing amazing! Keep it up! 🌟",
-  "Every line of code brings you closer to mastery! 💪",
-  "Mistakes are just learning opportunities in disguise! 🎭",
-  "I believe in you! You've got this! 🦉✨",
-  "Great coders aren't born, they're made through practice! 🔥",
+  "You're doing amazing! Keep it up!",
+  "Every line of code brings you closer to mastery!",
+  "Mistakes are just learning opportunities in disguise!",
+  "I believe in you! You've got this!",
+  "Great coders aren't born, they're made through practice!",
 ];
 
 const errorDebuggingTips: Record<string, string[]> = {
-  syntax: ["Check for missing colons (:) at the end of statements!", "Make sure all parentheses are closed!"],
+  syntax: ["Check for missing colons at the end of statements!", "Make sure all parentheses are closed!"],
   runtime: ["Make sure all variables are defined before use!", "Check variable name spelling!"],
   logic: ["Your code runs, but check your logic!", "Are you printing the right variable?"],
   unknown: ["Don't worry - let's look at your code together.", "Compare with the example above."],
@@ -97,6 +102,9 @@ const getMascotImage = (mood: MascotMood) => {
     case 'celebrating': return owlCelebrating;
     case 'error': return owlError;
     case 'encouraging': return owlEncouraging;
+    case 'confused': return owlConfused;
+    case 'sleeping': return owlSleeping;
+    case 'proud': return owlProud;
     default: return owlMascot;
   }
 };
@@ -104,7 +112,7 @@ const getMascotImage = (mood: MascotMood) => {
 const MascotGuide: React.FC<MascotGuideProps> = ({
   message, mood = 'idle', messages = defaultMessages, autoRotate = false, rotateInterval = 5000,
   className, size = 'md', showSpeechBubble = true, hints = defaultHints, encouragements = defaultEncouragements,
-  enableSounds = true, enableTyping = true, typingSpeed = 25, codeError = null, onDismissError,
+  enableSounds = true, enableTyping = true, typingSpeed = 25, codeError = null, onDismissError, enableVoice = false,
 }) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
@@ -113,17 +121,21 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
   const [extraMessage, setExtraMessage] = useState<string | null>(null);
   const [extraMood, setExtraMood] = useState<MascotMood>('idle');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [voiceEnabled, setVoiceEnabled] = useState(enableVoice);
   
   const { playMascotSpeakSound, playMascotExcitedSound, playMascotThinkingSound, playMascotCelebrateSound, playMascotHintSound } = useSoundEffects();
+  const { speak, stop, isSpeaking, isLoading } = useMascotVoice({ enabled: voiceEnabled });
 
   useEffect(() => {
     if (codeError) {
       const tips = errorDebuggingTips[codeError.type] || errorDebuggingTips.unknown;
       const randomTip = tips[Math.floor(Math.random() * tips.length)];
-      setErrorMessage(codeError.line ? `Oops! Line ${codeError.line}: ${codeError.message}\n\n💡 ${randomTip}` : `Oops! ${codeError.message}\n\n💡 ${randomTip}`);
+      const msg = codeError.line ? `Oops! Line ${codeError.line}: ${codeError.message}. ${randomTip}` : `Oops! ${codeError.message}. ${randomTip}`;
+      setErrorMessage(msg);
       if (enableSounds) playMascotThinkingSound();
+      if (voiceEnabled) speak(msg, 'error');
     } else { setErrorMessage(null); }
-  }, [codeError, enableSounds, playMascotThinkingSound]);
+  }, [codeError, enableSounds, playMascotThinkingSound, voiceEnabled, speak]);
 
   const displayMood: MascotMood = errorMessage ? 'error' : (extraMessage ? extraMood : (message ? mood : messages[currentMessageIndex]?.mood || mood));
   const currentMessage = errorMessage || extraMessage || message || messages[currentMessageIndex]?.text || '';
@@ -131,8 +143,8 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
 
   const playMoodSound = useCallback((newMood: MascotMood) => {
     if (!enableSounds) return;
-    if (newMood === 'excited') playMascotExcitedSound();
-    else if (newMood === 'thinking' || newMood === 'error') playMascotThinkingSound();
+    if (newMood === 'excited' || newMood === 'proud') playMascotExcitedSound();
+    else if (newMood === 'thinking' || newMood === 'error' || newMood === 'confused') playMascotThinkingSound();
     else if (newMood === 'celebrating') playMascotCelebrateSound();
     else if (newMood === 'encouraging') playMascotSpeakSound();
   }, [enableSounds, playMascotExcitedSound, playMascotThinkingSound, playMascotCelebrateSound, playMascotSpeakSound]);
@@ -150,36 +162,59 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
   const bubbleSizeClasses = { sm: 'max-w-[180px] text-xs', md: 'max-w-[280px] text-sm', lg: 'max-w-[350px] text-base' };
 
   const getMoodAnimation = () => {
-    if (displayMood === 'excited') return 'animate-bounce';
-    if (displayMood === 'thinking') return 'animate-pulse';
+    if (displayMood === 'excited' || displayMood === 'proud') return 'animate-bounce';
+    if (displayMood === 'thinking' || displayMood === 'confused') return 'animate-pulse';
     if (displayMood === 'encouraging' && isBouncing) return 'animate-bounce';
+    if (displayMood === 'sleeping') return 'animate-[breathe_3s_ease-in-out_infinite]';
     return '';
   };
 
   const getMoodEmoji = () => {
-    const emojis: Record<MascotMood, string> = { excited: '✨', thinking: '🤔', celebrating: '🎉', encouraging: '💪', error: '⚠️', idle: '' };
+    const emojis: Record<MascotMood, string> = { 
+      excited: '✨', thinking: '🤔', celebrating: '🎉', encouraging: '💪', 
+      error: '⚠️', confused: '❓', sleeping: '💤', proud: '👑', idle: '' 
+    };
     return emojis[displayMood];
   };
 
   const handleMascotClick = () => {
     if (enableSounds) playMascotSpeakSound();
-    if (errorMessage) { setErrorMessage(null); onDismissError?.(); return; }
+    if (errorMessage) { setErrorMessage(null); onDismissError?.(); stop(); return; }
     setShowInteractionMenu(!showInteractionMenu);
     if (extraMessage) setExtraMessage(null);
   };
 
   const handleAskHint = () => {
     if (enableSounds) playMascotHintSound();
-    setExtraMessage(hints[Math.floor(Math.random() * hints.length)]);
-    setExtraMood('thinking'); setShowInteractionMenu(false);
+    const hint = hints[Math.floor(Math.random() * hints.length)];
+    setExtraMessage(hint);
+    setExtraMood('thinking');
+    setShowInteractionMenu(false);
+    if (voiceEnabled) speak(hint, 'thinking');
     setTimeout(() => setExtraMessage(null), 8000);
   };
 
   const handleAskEncouragement = () => {
     if (enableSounds) playMascotExcitedSound();
-    setExtraMessage(encouragements[Math.floor(Math.random() * encouragements.length)]);
-    setExtraMood('encouraging'); setShowInteractionMenu(false);
+    const enc = encouragements[Math.floor(Math.random() * encouragements.length)];
+    setExtraMessage(enc);
+    setExtraMood('encouraging');
+    setShowInteractionMenu(false);
+    if (voiceEnabled) speak(enc, 'encouraging');
     setTimeout(() => setExtraMessage(null), 6000);
+  };
+
+  const handleSpeakMessage = () => {
+    if (isSpeaking) {
+      stop();
+    } else {
+      speak(currentMessage, displayMood);
+    }
+  };
+
+  const toggleVoice = () => {
+    setVoiceEnabled(!voiceEnabled);
+    if (voiceEnabled) stop();
   };
 
   return (
@@ -188,16 +223,22 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
         <div className={cn("relative transition-all duration-300 cursor-pointer", getMoodAnimation(), sizeClasses[size], "hover:scale-110")} onClick={handleMascotClick} role="button">
           <img src={getMascotImage(displayMood)} alt={`Sage the Owl - ${displayMood}`} className="w-full h-full object-contain drop-shadow-lg transition-all duration-300 hover:drop-shadow-xl" />
           {displayMood !== 'idle' && <span className={cn("absolute -top-2 -right-2 text-lg", displayMood === 'error' ? 'animate-pulse' : 'animate-bounce')}>{getMoodEmoji()}</span>}
-          <div className={cn("absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center shadow-md", errorMessage ? "bg-destructive animate-pulse" : "bg-primary animate-pulse")}>
-            {errorMessage ? <AlertTriangle className="w-3 h-3 text-destructive-foreground" /> : <MessageCircle className="w-3 h-3 text-primary-foreground" />}
+          <div className={cn("absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center shadow-md", errorMessage ? "bg-destructive animate-pulse" : isSpeaking ? "bg-chart-2 animate-pulse" : "bg-primary animate-pulse")}>
+            {errorMessage ? <AlertTriangle className="w-3 h-3 text-destructive-foreground" /> : isSpeaking ? <Volume2 className="w-3 h-3 text-primary-foreground" /> : <MessageCircle className="w-3 h-3 text-primary-foreground" />}
           </div>
         </div>
         {displayMood === 'celebrating' && <div className="absolute inset-0 pointer-events-none">{[...Array(5)].map((_, i) => <span key={i} className="absolute text-lg animate-ping" style={{ left: `${20 + i * 15}%`, top: `${10 + (i % 3) * 20}%`, animationDelay: `${i * 0.2}s`, animationDuration: '1s' }}>⭐</span>)}</div>}
+        {displayMood === 'sleeping' && <div className="absolute inset-0 pointer-events-none"><span className="absolute text-xl animate-bounce" style={{ right: '-10px', top: '-10px' }}>💤</span></div>}
         {showInteractionMenu && !errorMessage && (
-          <div className="absolute bottom-full left-0 mb-2 bg-card border border-border rounded-lg shadow-lg p-2 z-20 animate-fade-in">
+          <div className="absolute bottom-full left-0 mb-2 bg-card border border-border rounded-lg shadow-lg p-2 z-20 animate-fade-in min-w-[160px]">
             <p className="text-xs text-muted-foreground mb-2 px-2">Ask Sage:</p>
             <Button variant="ghost" size="sm" className="w-full justify-start text-sm gap-2 hover:bg-accent" onClick={handleAskHint}><Lightbulb className="w-4 h-4 text-chart-2" />Give me a hint</Button>
             <Button variant="ghost" size="sm" className="w-full justify-start text-sm gap-2 hover:bg-accent" onClick={handleAskEncouragement}><span className="text-base">💪</span>Encourage me</Button>
+            <div className="border-t border-border my-1" />
+            <Button variant="ghost" size="sm" className="w-full justify-start text-sm gap-2 hover:bg-accent" onClick={toggleVoice}>
+              {voiceEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+              {voiceEnabled ? 'Voice On' : 'Voice Off'}
+            </Button>
           </div>
         )}
       </div>
@@ -207,7 +248,14 @@ const MascotGuide: React.FC<MascotGuideProps> = ({
           {errorMessage && <div className="flex items-center gap-2 mb-2 pb-2 border-b border-destructive/20"><AlertTriangle className="w-4 h-4 text-destructive" /><span className="text-xs font-semibold text-destructive">Debugging Help</span></div>}
           <div className="flex items-start gap-2">
             <p className={cn("font-medium leading-relaxed flex-1 whitespace-pre-wrap", errorMessage ? "text-sm" : "text-foreground")}>{displayedText}{isTyping && <span className="inline-block w-1 h-4 bg-primary ml-0.5 animate-pulse" />}</p>
-            {(extraMessage || errorMessage) && !isTyping && <button onClick={() => { setErrorMessage(null); setExtraMessage(null); onDismissError?.(); }} className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"><X className="w-4 h-4" /></button>}
+            <div className="flex flex-col gap-1 flex-shrink-0">
+              {voiceEnabled && !isTyping && (
+                <button onClick={handleSpeakMessage} className={cn("text-muted-foreground hover:text-foreground transition-colors p-1 rounded", isSpeaking && "text-primary")} disabled={isLoading} aria-label={isSpeaking ? "Stop speaking" : "Read aloud"}>
+                  {isLoading ? <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" /> : isSpeaking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                </button>
+              )}
+              {(extraMessage || errorMessage) && !isTyping && <button onClick={() => { setErrorMessage(null); setExtraMessage(null); onDismissError?.(); stop(); }} className="text-muted-foreground hover:text-foreground transition-colors p-1"><X className="w-4 h-4" /></button>}
+            </div>
           </div>
           {extraMessage && !isTyping && !errorMessage && <p className="text-xs text-muted-foreground mt-2">Click me again for more! 🦉</p>}
           {errorMessage && !isTyping && <p className="text-xs text-muted-foreground mt-2">Click me to dismiss! 🔄</p>}
